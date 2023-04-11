@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>lobby</class>
+ <widget class="QWidget" name="lobby">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>720</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>60</y>
+     <width>251</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>思源黑体 CN</family>
+     <pointsize>17</pointsize>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Game Lobby</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ptn_createRoom">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>140</y>
+     <width>251</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Create Room</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ptn_joinRoom">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>260</y>
+     <width>251</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Join Room</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ptn_backToHome">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>500</y>
+     <width>251</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Back to Home</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="ptn_watch">
+   <property name="geometry">
+    <rect>
+     <x>680</x>
+     <y>380</y>
+     <width>251</width>
+     <height>81</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Watch Match</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="roomInfo">
+   <property name="geometry">
+    <rect>
+     <x>80</x>
+     <y>140</y>
+     <width>500</width>
+     <height>441</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
