@@ -1,9 +1,4 @@
 #include "tcpserver.h"
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <netinet/tcp.h>
-#include <sys/socket.h>
-#include <unistd.h>
 
 tcpserver::tcpserver()
     : m_sockfd(-1), m_connfd(-1), m_socklen(0), m_btimeout(false) {
@@ -29,10 +24,10 @@ bool tcpserver::initServer(const unsigned int port) {
     int nagleStatus = 1;
     int result = setsockopt(m_sockfd, IPPROTO_TCP, TCP_NODELAY,
                             (char *)&nagleStatus, sizeof(int));
-    if(result == -1){
+    if (result == -1) {
         throw "Failed to change nagle status\n";
     }
-    std::cout <<"finished\n";
+    std::cout << "finished\n";
 
     bzero(&m_servaddr, sizeof(m_servaddr)); // Zero the socket fd
     m_servaddr.sin_family = AF_INET;        // IPv4
@@ -54,13 +49,12 @@ bool tcpserver::initServer(const unsigned int port) {
 
     m_socklen = sizeof(struct sockaddr_in);
 
-    // 创建epoll实例
     if (epld < 0) {
         perror("epoll create error");
         return -1;
     }
 
-    // 将监听的socket放入epoll
+    // Put the listening socket into the epoll
 
     ev.events = EPOLLIN;
     ev.data.fd = m_sockfd;

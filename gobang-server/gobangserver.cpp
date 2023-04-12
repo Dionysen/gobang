@@ -1,30 +1,16 @@
 #include "gobangserver.h"
-#include "./lib/openjson/openjson.h"
-#include "tcpserver.h"
-#include <algorithm>
-#include <cstdio>
-#include <cstring>
-#include <iostream>
-#include <iterator>
-#include <map>
-#include <netinet/in.h>
-#include <ostream>
-#include <sched.h>
-#include <string>
-#include <strings.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <utility>
-#include <vector>
 
 gobangserver::gobangserver() { tcpServer.initServer(DEFAULT_PORT); }
 
-int gobangserver::findRival(int connfd) { // 查找对手的套接字,没有对手时返回-1
+int gobangserver::findRival(int connfd) { // Find the socket of the opponent and
+                                          // return -1 when there is no opponent
     return players.at(connfd)->m_rivalConnfd;
 }
 
-std::map<int, room>::iterator gobangserver::getRoom(
-    int connfd) { // 返回值的first为房间ID,second为玩家，找不到时返回lobby.end()
+std::map<int, room>::iterator
+gobangserver::getRoom(int connfd) { // The first value of the return value is
+                                    // the room ID, second is the player, and if
+                                    // it is not found, it returns lobby.end()
     for (auto i = lobby.begin(); i != lobby.end(); i++) {
         if (i->second.blackPlayer != nullptr)
             if (i->second.blackPlayer->m_connfd == connfd)
@@ -37,8 +23,9 @@ std::map<int, room>::iterator gobangserver::getRoom(
     return lobby.end();
 }
 
-std::map<int, room>::iterator gobangserver::getWatchersRoom(
-    int connfd) { // 寻找观战者的房间，找不到返回lobby.end()
+std::map<int, room>::iterator
+gobangserver::getWatchersRoom(int connfd) { // Looking for the watcher's room,
+                                            // can't find the return lobby.end()
     for (auto i = lobby.begin(); i != lobby.end(); i++) {
         for (auto j = i->second.watchers.begin(); j != i->second.watchers.end();
              j++) {
@@ -54,7 +41,15 @@ int gobangserver::getChessColor(int connfd) {
     return players.at(connfd)->m_color;
 }
 
-void gobangserver::updateInfo() { // 从玩家信息，更新到大厅和房间信息
+void gobangserver::turnToNext(int connfd) {
+    if (getRoom(connfd)->second.turn == BLACK_CHESS) {
+        getRoom(connfd)->second.turn = WHITE_CHESS;
+    } else
+        getRoom(connfd)->second.turn = BLACK_CHESS;
+}
+
+void gobangserver::updateInfo() { // From player information, update to lobby
+                                  // and room information
     for (auto i : players) {
         switch (i.second->status) {
         case IN_LOBBY:
@@ -89,14 +84,16 @@ void gobangserver::updateInfo() { // 从玩家信息，更新到大厅和房间�
 }
 
 void gobangserver::sentInfo(int connfd) {
-    updateInfo();    // 更新游戏状态
-    sentLobbyInfo(); // 向所有人发送大厅信息
-    sentUserInfo();  // 向所有用户发送自己的信息
-    sentRoomInfo(connfd); // 如果用户在房间，则发送房间信息到选手双方和所有观众
-    sentMatchInfo(connfd); // 如果用户在房间，则发送对战信息到选手双方和所有观众
+    updateInfo();         // Update game state
+    sentLobbyInfo();      // Send lobby messages to everyone
+    sentUserInfo();       // Send your own information to all users
+    sentRoomInfo(connfd); // If the user is in the room, the room information is
+                          // sent to both contestants and all spectators
+    sentMatchInfo(connfd); // If the user is in the room, match information is
+                           // sent to both players and all spectators
 }
 
-void gobangserver::sentLobbyInfo() { // 发送大厅信息
+void gobangserver::sentLobbyInfo() {
     std::string buff{};
     buff.clear();
 
@@ -120,8 +117,9 @@ void gobangserver::sentLobbyInfo() { // 发送大厅信息
     memcpy(sendMsg, &len, sizeof(int));
     memcpy(sendMsg + sizeof(int), buff.c_str(), len);
 
-    std::cout << "服务器: 发送大厅信息： " << (std::string)sendMsg << std::endl;
-    for (auto i : players) // 向所有人发送大厅信息
+    std::cout << "Server: sent lobby info： " << (std::string)sendMsg
+              << std::endl;
+    for (auto i : players) // Send lobby messages to everyone
     {
         if (-1 == send(i.second->m_connfd, sendMsg,
                        strlen(buff.c_str()) + sizeof(int), 0)) {
@@ -130,10 +128,8 @@ void gobangserver::sentLobbyInfo() { // 发送大厅信息
     }
 }
 
-// 除了大厅信息，所有函数都只向一个客户端发送信息
+void gobangserver::sentMatchInfo(int connfd) { // Send checkerboard information
 
-void gobangserver::sentMatchInfo(int connfd) { // 发送棋盘信息
-                                               // 是玩家或房间号
     std::string buff{};
     buff.clear();
 
@@ -141,13 +137,13 @@ void gobangserver::sentMatchInfo(int connfd) { // 发送棋盘信息
 
     json.clear();
 
-    if (players[connfd]->status == IN_LOBBY) { // 在大厅
+    if (players[connfd]->status == IN_LOBBY) { // In lobby
         // do nothing
     } else if (players[connfd]->status == IN_ROOM ||
-               players[connfd]->status == GAMING) { // 是玩家
+               players[connfd]->status == GAMING) { // is player
         json["head"] = "board";
         json["connfd"] = connfd;
-        json["turn"] = getRoom(connfd)->second.turn; // 轮次
+        json["turn"] = getRoom(connfd)->second.turn; // turn
         auto &nodeBoard = json["board"];
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -156,7 +152,8 @@ void gobangserver::sentMatchInfo(int connfd) { // 发送棋盘信息
                     getRoom(connfd)->second.positionStatus[i][j];
             }
         }
-        // 玩家可能会改变，因此给所有需要的人更新棋盘信息
+        // Players may change, so update the board information to everyone who
+        // needs it
         buff = json.encode();
 
         len = strlen(buff.c_str());
@@ -171,10 +168,10 @@ void gobangserver::sentMatchInfo(int connfd) { // 发送棋盘信息
             send(getRoom(connfd)->second.watchers[i], sendMsg,
                  strlen(buff.c_str()) + sizeof(int), 0);
         }
-    } else if (players[connfd]->status == WATCHING) { // 是观众
+    } else if (players[connfd]->status == WATCHING) { // is watcher
         json["head"] = "board";
         json["connfd"] = connfd;
-        json["turn"] = WATCHING; // 观众轮次是3
+        json["turn"] = WATCHING; // watcher's turn always is 3
         auto &nodeBoard = json["board"];
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++) {
@@ -183,7 +180,8 @@ void gobangserver::sentMatchInfo(int connfd) { // 发送棋盘信息
                     getWatchersRoom(connfd)->second.positionStatus[i][j];
             }
         }
-        // 观众不会改变棋盘状态，原路返回即可
+        // The audience will not change the state of the board, just return the
+        // same way
         buff = json.encode();
 
         len = strlen(buff.c_str());
@@ -192,10 +190,10 @@ void gobangserver::sentMatchInfo(int connfd) { // 发送棋盘信息
 
         send(connfd, sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
     }
-    std::cout << "服务器: 发送棋盘信息： " << sendMsg << std::endl;
+    std::cout << "Server: sent board info： " << sendMsg << std::endl;
 }
 
-void gobangserver::sentUserInfo() { // 向单个客户端发送用户信息
+void gobangserver::sentUserInfo() { // Send user information to a single client
 
     std::string buff{};
     buff.clear();
@@ -242,12 +240,12 @@ void gobangserver::sentUserInfo() { // 向单个客户端发送用户信息
         memcpy(sendMsg, &len, sizeof(int));
         memcpy(sendMsg + sizeof(int), buff.c_str(), len);
 
-        std::cout << "服务器: 发送用户信息： " << sendMsg << std::endl;
+        std::cout << "Server: sent user info： " << sendMsg << std::endl;
         send(i.first, sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
     }
 }
 
-void gobangserver::sentRoomInfo(int connfd) { // 发送房间内玩家信息
+void gobangserver::sentRoomInfo(int connfd) { // Send in-room player information
 
     std::string buff{};
     buff.clear();
@@ -259,7 +257,7 @@ void gobangserver::sentRoomInfo(int connfd) { // 发送房间内玩家信息
     json["connfd"] = connfd;
     auto &nodeRoom = json["room"];
 
-    if (players[connfd]->status == WATCHING) { // 在观众席
+    if (players[connfd]->status == WATCHING) { // is watcher
         if (getWatchersRoom(connfd)->second.blackPlayer != nullptr &&
             getWatchersRoom(connfd)->second.whitePlayer != nullptr) {
             nodeRoom["blackID"] =
@@ -294,10 +292,13 @@ void gobangserver::sentRoomInfo(int connfd) { // 发送房间内玩家信息
         memcpy(sendMsg + sizeof(int), buff.c_str(), len);
 
         send(connfd, sendMsg, strlen(buff.c_str()) + sizeof(int),
-             0); // 观众的消息不会改变房间内部显示状态，因此只需原路发回
+             0); // The audience's message does not change the internal display
+                 // status of the room, so it only needs to be sent back the
+                 // same way
 
     } else if (players[connfd]->status == IN_ROOM ||
-               players[connfd]->status == GAMING) { // 在房间中或游戏中
+               players[connfd]->status ==
+                   GAMING) { // In the room or in the game
         if (getRoom(connfd)->second.blackPlayer != nullptr &&
             getRoom(connfd)->second.whitePlayer != nullptr) {
             nodeRoom["blackID"] = getRoom(connfd)->second.blackPlayer->m_connfd;
@@ -318,8 +319,8 @@ void gobangserver::sentRoomInfo(int connfd) { // 发送房间内玩家信息
             nodeRoom["whiteName"] = getRoom(connfd)->second.whitePlayer->m_name;
         }
 
-        buff =
-            json.encode(); // 玩家可能会改变房间内信息，因此向每个观众更新房间内信息
+        buff = json.encode(); // Players may change in-room information, so
+                              // update in-room information to each viewer
 
         len = strlen(buff.c_str());
         memcpy(sendMsg, &len, sizeof(int));
@@ -334,11 +335,11 @@ void gobangserver::sentRoomInfo(int connfd) { // 发送房间内玩家信息
         }
     }
 
-    std::cout << "服务器: 发送房间信息： " << sendMsg << std::endl;
+    std::cout << "Server: sent room info: " << sendMsg << std::endl;
 }
 
 void gobangserver::sentResultInfo(int connfd,
-                                  int color) { // 向connfd发送对局结果
+                                  int color) { // Send match results to connfd
 
     if (getRoom(connfd)->second.isGaming) {
         std::string buff{};
@@ -355,50 +356,56 @@ void gobangserver::sentResultInfo(int connfd,
         memcpy(sendMsg, &len, sizeof(int));
         memcpy(sendMsg + sizeof(int), buff.c_str(), len);
         send(connfd, sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
-        std::cout << "服务器: 发送结果信息： " << buff << std::endl;
+        std::cout << "Server: Sent result info " << buff << std::endl;
     }
 }
 
-// 接收到客户端的信号后，根据解析出的信息做出反应
-void gobangserver::parseInfo(
-    int connfd,
-    char buff[1024]) { // 解析信息，根据来信内容做出反应
+// After receiving the signal from the client, it reacts according to the parsed
+// information
+void gobangserver::parseInfo(int connfd, char buff[1024]) {
 
     open::OpenJson json;
     json.decode(buff);
 
-    std::cout << "客户端: " << connfd << " 发送信息： " << buff << std::endl;
+    std::cout << "Client: " << connfd << " Sent info: " << buff << std::endl;
 
     std::string action = json["action"].s();
 
-    if (action.compare("createRoom") == 0) { // 信号为创建房间
+    if (action.compare("createRoom") == 0) { // The signal is to create a room
         createRoom(connfd);
-    } else if (action.compare("toLobby") == 0) { // 信号为进入大厅
+    } else if (action.compare("toLobby") ==
+               0) { // The signal is to enter the lobby
         players[connfd]->m_connfd = connfd;
-    } else if (action.compare("joinRoom") == 0) { // 信号为加入房间
+    } else if (action.compare("joinRoom") ==
+               0) { // The signal is to join the room
         joinRoom(connfd, json["roomID"].i32());
-    } else if (action.compare("watchMatch") == 0) { // 信号为观看比赛
+    } else if (action.compare("watchMatch") ==
+               0) { // The signal is to watch the game
         watchMatch(connfd, json["roomID"].i32());
-    } else if (action.compare("quitRoom") == 0) { // 信号为退出房间
+    } else if (action.compare("quitRoom") ==
+               0) { // The signal is to exit the room
         quitRoom(connfd);
-    } else if (action.compare("quitLobby") == 0) { // 信号为退出大厅
+    } else if (action.compare("quitLobby") ==
+               0) { // The signal is to exit the lobby
         quitLobby(connfd);
-    } else if (action.compare("restart") == 0) { // 信号为开始新的一局
+    } else if (action.compare("restart") ==
+               0) { // The signal is to start a new round
         restart(connfd);
-    } else if (action.compare("prepare") == 0) { // 信号为准备
+    } else if (action.compare("prepare") == 0) { // Signals are ready
         prepare(connfd);
-    } else if (action.compare("drop") == 0) { // 信号为落子
+    } else if (action.compare("drop") == 0) { // The signal is a drop
         int x{json["x"].i32()};
         int y{json["y"].i32()};
         drop(connfd, x, y);
-    } else if (action.compare("request") == 0) {      // 信号为请求
-        if (json["type"].s().compare("retract") == 0) // 请求悔棋
-            // 发送悔棋请求
+    } else if (action.compare("request") == 0) {      // The signal is a request
+        if (json["type"].s().compare("retract") == 0) // Ask for repentance
+            // Send a repentance request
             requestRetract(connfd);
-    } else if (action.compare("respond") == 0) {      // 信号为回应
-        if (json["type"].s().compare("retract") == 0) // 回应悔棋
+    } else if (action.compare("respond") == 0) { // The signal is a response
+        if (json["type"].s().compare("retract") == 0) // Respond to Repentance
             respondRetract(connfd, json["anwser"].b());
-    } else if (action.compare("concede") == 0) { // 信号为认输
+    } else if (action.compare("concede") ==
+               0) { // The signal is to throw in the towel
         if (getRoom(connfd)->second.whitePlayer->m_connfd == connfd) {
             sentResultInfo(connfd, BLACK_CHESS);
             sentResultInfo(findRival(connfd), BLACK_CHESS);
@@ -408,15 +415,16 @@ void gobangserver::parseInfo(
             sentResultInfo(findRival(connfd), BLACK_CHESS);
             restart(connfd);
         }
-    } else if (action.compare("exit") == 0) { // 信号为退出（视为认输
+    } else if (action.compare("exit") ==
+               0) { // The signal is exit (considered as a towel throw
     } else {
-        std::cout << "Parse error!!!\n";
+        std::cout << "Parse error.\n";
     }
     sentInfo(connfd);
 }
 
-// 动作
-void gobangserver::retract(int connfd) { // 悔棋操作
+// action
+void gobangserver::retract(int connfd) {
     if (!getRoom(connfd)->second.m_board.empty()) {
         std::cout << "in retract\n";
         getRoom(connfd)->second.m_board.pop_back();
@@ -430,7 +438,7 @@ void gobangserver::retract(int connfd) { // 悔棋操作
         turnToNext(connfd);
     }
 }
-void gobangserver::requestRetract(int connfd) { // 请求悔棋
+void gobangserver::requestRetract(int connfd) {
     std::string buff{};
     json.clear();
     json["head"] = "request";
@@ -445,7 +453,7 @@ void gobangserver::requestRetract(int connfd) { // 请求悔棋
     std::cout << "[Send request Info: " << buff << std::endl;
 }
 
-void gobangserver::respondRetract(int connfd, bool anwser) { // 回应悔棋
+void gobangserver::respondRetract(int connfd, bool anwser) {
     if (anwser) {
         retract(connfd);
         sentMatchInfo(connfd);
@@ -467,7 +475,7 @@ void gobangserver::respondRetract(int connfd, bool anwser) { // 回应悔棋
     std::cout << "[Send request Info: " << buff << std::endl;
 }
 
-void gobangserver::createRoom(int connfd) { // 创建房间
+void gobangserver::createRoom(int connfd) {
     if (getRoom(connfd) == lobby.end()) {
         room r;
         r.blackPlayer = players[connfd];
@@ -482,11 +490,12 @@ void gobangserver::createRoom(int connfd) { // 创建房间
         std::cout << "Room has always exist\n";
 }
 
-void gobangserver::joinRoom(int connfd, int roomID) { // 加入房间
-    if (lobby.find(roomID) != lobby.end()) {          // 房间存在
+void gobangserver::joinRoom(int connfd, int roomID) {
+    if (lobby.find(roomID) != lobby.end()) { // Room exists
         if (lobby[roomID].whitePlayer == nullptr) {
-            lobby[roomID].whitePlayer = players[connfd]; // 将玩家放入房间
-                                                         // 改变玩家信息
+            lobby[roomID].whitePlayer =
+                players[connfd]; // Place the player in the room
+                                 // Change player information
             players[connfd]->status = IN_ROOM;
             players[connfd]->m_rivalConnfd =
                 getRoom(connfd)->second.blackPlayer->m_connfd;
@@ -503,33 +512,36 @@ void gobangserver::joinRoom(int connfd, int roomID) { // 加入房间
 
 void gobangserver::quitRoom(int connfd) {
     if (players[connfd]->status == WATCHING &&
-        getWatchersRoom(connfd) != lobby.end()) { // 是观战者
+        getWatchersRoom(connfd) != lobby.end()) { // Be spectators
         for (auto i = getWatchersRoom(connfd)->second.watchers.begin();
              i != getWatchersRoom(connfd)->second.watchers.end(); i++) {
             if (connfd == (*i)) {
-                getWatchersRoom(connfd)->second.watchers.erase(i); // 擦除观战者
+                getWatchersRoom(connfd)->second.watchers.erase(
+                    i); // Erase spectators
                 break;
             }
         }
-    } else if (players[connfd]->status == IN_ROOM) { // 在房间中，游戏未开始
-        if (getChessColor(connfd) == BLACK_CHESS) { // 黑棋退出
-            if (findRival(connfd) != -1) {          // 白棋也在
+    } else if (players[connfd]->status ==
+               IN_ROOM) { // In the room, the game does not start
+        if (getChessColor(connfd) == BLACK_CHESS) { // Black Chess exits
+            if (findRival(connfd) != -1) {          // White chess is also there
                 int whiteid = findRival(connfd);
                 std::vector<int> watcher(
-                    getRoom(connfd)->second.watchers); // 拷贝构造watchers
+                    getRoom(connfd)
+                        ->second.watchers); // Copy construct watchers
                 lobby.erase(connfd);
                 createRoom(whiteid);
                 for (int i = 0; i < watcher.size(); i++) {
                     getRoom(whiteid)->second.watchers.push_back(watcher[i]);
                 }
                 getRoom(whiteid)->second.blackPlayer->m_rivalConnfd = -1;
-            } else { // 白棋不在，只有黑棋
+            } else { // White chess is not there, only black chess
                 for (int i = 0; i < getRoom(connfd)->second.watchers.size();
                      i++) {
                     players[getRoom(connfd)->second.watchers[i]]->status =
                         IN_LOBBY;
                 }
-                lobby.erase(getRoom(connfd)->second.roomID); // 删除房间
+                lobby.erase(getRoom(connfd)->second.roomID); // Delete the room
             }
         } else if (getChessColor(connfd) == WHITE_CHESS) {
             auto i = getRoom(connfd);
@@ -539,7 +551,8 @@ void gobangserver::quitRoom(int connfd) {
         }
     } else if (players[connfd]->status == GAMING) {
         sentResultInfo(findRival(connfd),
-                       getChessColor(findRival(connfd))); // 向对方发送对局结果
+                       getChessColor(findRival(
+                           connfd))); // Send match results to the other side
         restart(connfd);
         quitRoom(connfd);
     } else {
@@ -555,7 +568,6 @@ void gobangserver::quitLobby(int connfd) {
         delete iter->second;
         iter->second = nullptr;
         players.erase(iter++);
-
         // tcpServer.closeClient();
     }
 }
@@ -579,23 +591,24 @@ void gobangserver::restart(int connfd) {
     getRoom(connfd)->second.m_step = 0;
 }
 
-void gobangserver::disconnect(int connfd) { // 断开连接
-    // 判定输赢
+void gobangserver::disconnect(int connfd) { // Disconnect
     tcpServer.closeClient();
 }
 
-void gobangserver::drop(int connfd, int x, int y) { // 落子
+void gobangserver::drop(int connfd, int x, int y) {
     if (getRoom(connfd) != lobby.end()) {
         if (connfd == getRoom(connfd)->second.blackPlayer->m_connfd) {
             getRoom(connfd)->second.currentChess =
                 chess(x, y, BLACK_CHESS,
-                      getRoom(connfd)->second.m_step); // 创建棋子
+                      getRoom(connfd)->second.m_step); // Create chess
             getRoom(connfd)->second.m_board.push_back(
-                getRoom(connfd)->second.currentChess); // 棋子放入容器
+                getRoom(connfd)->second.currentChess); // The pieces are placed
+                                                       // in containers
             getRoom(connfd)->second.positionStatus[x][y] =
-                BLACK_CHESS; // 改变棋盘状态
+                BLACK_CHESS; // Change the chessboard status
             turnToNext(connfd);
-            if (isWin(connfd, x, y, BLACK_CHESS) == BLACK_CHESS) { // 黑棋赢
+            if (isWin(connfd, x, y, BLACK_CHESS) ==
+                BLACK_CHESS) { // Black chess wins
                 sentResultInfo(connfd, BLACK_CHESS);
                 sentResultInfo(findRival(connfd), BLACK_CHESS);
                 restart(connfd);
@@ -607,7 +620,8 @@ void gobangserver::drop(int connfd, int x, int y) { // 落子
                 getRoom(connfd)->second.currentChess);
             getRoom(connfd)->second.positionStatus[x][y] = WHITE_CHESS;
             turnToNext(connfd);
-            if (isWin(connfd, x, y, WHITE_CHESS) == WHITE_CHESS) { // 白棋赢
+            if (isWin(connfd, x, y, WHITE_CHESS) ==
+                WHITE_CHESS) { // White chess wins
                 sentResultInfo(connfd, WHITE_CHESS);
                 sentResultInfo(findRival(connfd), WHITE_CHESS);
                 restart(connfd);
@@ -620,7 +634,7 @@ void gobangserver::drop(int connfd, int x, int y) { // 落子
 }
 
 int gobangserver::isWin(int connfd, int x, int y,
-                        int color) { // 输赢判断函数
+                        int color) { // Win and loss judgment function
     for (int i = -4; i <= 0; i++) {
         if (getRoom(connfd)->second.positionStatus[x + i][y] == color &&
             getRoom(connfd)->second.positionStatus[x + i + 1][y] == color &&
@@ -668,12 +682,13 @@ int gobangserver::isWin(int connfd, int x, int y,
     return NO_CHESS;
 }
 
-void gobangserver::prepare(int connfd) { // 准备
+void gobangserver::prepare(int connfd) {
     if (players[connfd]->status == IN_ROOM && findRival(connfd) != -1 &&
-        players[findRival(connfd)]->status == IN_ROOM) { // 在房间中，且双方都在
-        players[connfd]->m_prepare = true; // 将自己设置为准备
+        players[findRival(connfd)]->status ==
+            IN_ROOM) { // In the room, and both sides are there
+        players[connfd]->m_prepare = true; // Set self up to prepare
     } else
-        std::cout << "prepare false!!!\n";
+        std::cout << "prepare false!\n";
 }
 
 void gobangserver::watchMatch(int connfd, int roomID) {
