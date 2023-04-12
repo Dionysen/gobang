@@ -1,8 +1,10 @@
 #ifndef RECVTHREAD_H
 #define RECVTHREAD_H
+
 #include <QThread>
 #include <iostream>
-#include <string.h>
+#include <string>
+
 #ifdef WIN32
 #include <windows.h>
 #include <winsock2.h>

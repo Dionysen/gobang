@@ -2,7 +2,9 @@
 #define LOBBY_H
 
 #include <QWidget>
+#include <iostream>
 #include <vector>
+
 namespace Ui {
 class lobby;
 }

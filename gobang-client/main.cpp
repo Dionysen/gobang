@@ -3,7 +3,7 @@
 
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    qRegisterMetaType<std::string>("std::string");
+    qRegisterMetaType<std::string>("std::string"); // for lambda function, maybe
     qRegisterMetaType<bool>("bool");
     MainWindow w;
     w.show();

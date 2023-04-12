@@ -1,6 +1,5 @@
 #include "settingdialog.h"
 #include "ui_settingdialog.h"
-#include <qobjectdefs.h>
 
 SettingDialog::SettingDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::SettingDialog) {
@@ -9,7 +8,8 @@ SettingDialog::SettingDialog(QWidget *parent)
 
 SettingDialog::~SettingDialog() { delete ui; }
 
-void SettingDialog::on_SettingDialog_accepted() {
+void SettingDialog::on_SettingDialog_accepted() { // get settings, send it to
+                                                  // Game
     int difficulty = ui->comboBox->currentIndex();
     int color = ui->comboBox_2->currentIndex();
     QString time = ui->lineEdit->text();

@@ -1,15 +1,14 @@
 #ifndef CHESS_H
 #define CHESS_H
 
-#include <qnamespace.h>
-#include <qpoint.h>
+#include <QPoint>
 class chess {
-private:
+  private:
     QPoint pos;
-    int color; // black:0 white:1 other:2~*
+    int color; // black:0 white:1 other: 2 ~ *
     int step;
 
-public:
+  public:
     chess();
     inline int x() { return pos.x(); };
     inline const int y() { return pos.y(); }

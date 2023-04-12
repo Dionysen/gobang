@@ -29,6 +29,7 @@ set(PROJECT_SOURCES
     mainwindow.h
     mainwindow.ui
 
+    ./base/base.h
     ./base/chess.h ./base/chess.cpp
 
     ./local/home.h ./local/home.cpp ./local/home.ui

@@ -1,7 +1,4 @@
 #include "recvthread.h"
-#include <cstdio>
-#include <iostream>
-#include <ostream>
 
 recvthread::recvthread(QObject *parent) : QThread(parent) {}
 

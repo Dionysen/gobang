@@ -1,10 +1,6 @@
 #include "onlinegame.h"
 #include "chess.h"
 #include "ui_onlinegame.h"
-#include <iostream>
-#include <ostream>
-#include <qobjectdefs.h>
-#include <qpushbutton.h>
 
 onlinegame::onlinegame(QWidget *parent)
     : QWidget(parent), ui(new Ui::onlinegame) {
@@ -27,13 +23,12 @@ onlinegame::onlinegame(QWidget *parent)
     });
 
     connect(ui->preBtn, &QPushButton::clicked, this, [=] {
-        emit signalPrepare(); // 发送准备信号
+        emit signalPrepare(); // send signal preparing
     });
 }
 
 onlinegame::~onlinegame() { delete ui; }
 
-// 大局函数
 void onlinegame::newGame() {
     status = IN_LOBBY;
     selfTurn = false;
@@ -61,7 +56,7 @@ void onlinegame::setWatcher(bool isWatcher) {
     }
 }
 
-void onlinegame::updateRoomInfo() { // 更新房间信息
+void onlinegame::updateRoomInfo() { // update room info
     // black
     ui->blackID->setText(QString::fromStdString(
         "Black ID: " + std::to_string(this->m_blackPlayerId)));
@@ -77,36 +72,35 @@ void onlinegame::updateRoomInfo() { // 更新房间信息
     ui->whiteTime->setText(
         QString::fromStdString("Time: " + std::to_string(m_whiteTime)));
 
-    if (status == GAMING ||
-        status == WATCHING) { // 在线模式，且游戏开始，隐藏准备按钮
+    if (status == GAMING || status == WATCHING) { // GAMING
         ui->preBtn->setFixedSize(0, 0);
     } else
         ui->preBtn->setFixedSize(300, 200);
 }
 
-// 事件函数
+// event function
 void onlinegame::paintEvent(QPaintEvent *event) {
-    QPainter paint(this); // 创建画家对象
+    QPainter paint(this);
 
     QColor boardBackgroundColor(206, 178, 152);
     paint.setPen(boardBackgroundColor);
     paint.setBrush(boardBackgroundColor);
     paint.drawRect(POS - WIDTH / 2, POS - WIDTH / 2, 15 * WIDTH, 15 * WIDTH);
 
-    paint.setPen(QPen(QColor(Qt::black), 1)); // 设置画笔，黑色，宽度为1
-    for (int i = 0; i < ROW_COLUM; i++) {     // 画出棋盘
+    paint.setPen(QPen(QColor(Qt::black), 1));
+    for (int i = 0; i < ROW_COLUM; i++) {
         paint.drawLine(POS + i * WIDTH, POS, POS + i * WIDTH, POS + 14 * WIDTH);
     }
     for (int i = 0; i < ROW_COLUM; i++) {
         paint.drawLine(POS, POS + i * WIDTH, POS + 14 * WIDTH, POS + i * WIDTH);
     }
-    // 加深边框
+
     paint.setPen(QPen(QColor(Qt::black), 2));
     paint.drawLine(POS, POS, POS + 14 * WIDTH, POS);
     paint.drawLine(POS, POS, POS, POS + 14 * WIDTH);
     paint.drawLine(POS + 14 * WIDTH, POS, POS + 14 * WIDTH, POS + 14 * WIDTH);
     paint.drawLine(POS, POS + 14 * WIDTH, POS + 14 * WIDTH, POS + 14 * WIDTH);
-    // 加上定位点
+
     paint.setBrush(Qt::black);
     paint.drawEllipse(POS + 3 * WIDTH - POS_SIZE, POS + 3 * WIDTH - POS_SIZE,
                       POS_SIZE * 2, POS_SIZE * 2);
@@ -118,8 +112,6 @@ void onlinegame::paintEvent(QPaintEvent *event) {
                       POS_SIZE * 2, POS_SIZE * 2);
     paint.drawEllipse(POS + 7 * WIDTH - POS_SIZE, POS + 7 * WIDTH - POS_SIZE,
                       POS_SIZE * 2, POS_SIZE * 2);
-
-    // 绘制已存在的棋子
 
     for (int i = 0; i < 15; ++i) {
         for (int j = 0; j < 15; ++j) {
@@ -138,7 +130,7 @@ void onlinegame::paintEvent(QPaintEvent *event) {
             }
         }
     }
-    // 绘制悬空棋子
+
     if (hoverPosition.x() >= 0 && hoverPosition.x() < 15 &&
         hoverPosition.y() >= 0 && hoverPosition.y() < 15 && status == GAMING) {
         bool isExist = false;
@@ -169,8 +161,7 @@ void onlinegame::paintEvent(QPaintEvent *event) {
     paint.end();
 }
 
-void onlinegame::mouseReleaseEvent(QMouseEvent *event) // 检测鼠标施放信号
-{
+void onlinegame::mouseReleaseEvent(QMouseEvent *event) {
     if (event->button() == Qt::LeftButton && status == GAMING) {
         int x = (event->pos().x() - POS + WIDTH / 2) / WIDTH;
         int y = (event->pos().y() - POS + WIDTH / 2) / WIDTH;
@@ -194,9 +185,9 @@ void onlinegame::mouseMoveEvent(QMouseEvent *event) {
     }
 }
 
-// 动作
+// Operator
 
-void onlinegame::drop(int x, int y) { // 下棋
+void onlinegame::drop(int x, int y) {
     if (status == GAMING && selfTurn) {
         if (positionStatus[x][y] == NO_CHESS) {
             currentChess = chess(x, y, selfColor, step);
@@ -206,9 +197,9 @@ void onlinegame::drop(int x, int y) { // 下棋
     }
 }
 
-chess onlinegame::getCurrentChess() { return currentChess; } // 获取当前棋子
+chess onlinegame::getCurrentChess() { return currentChess; }
 
-void onlinegame::updateBoard(int pos[15][15]) { // 更新棋盘信息
+void onlinegame::updateBoard(int pos[15][15]) {
     for (int i = 0; i < 15; i++) {
         for (int j = 0; j < 15; j++) {
             positionStatus[i][j] = pos[i][j];
@@ -217,7 +208,7 @@ void onlinegame::updateBoard(int pos[15][15]) { // 更新棋盘信息
     update();
 }
 
-void onlinegame::respondWin(int color) { // 回应棋局结束
+void onlinegame::respondWin(int color) {
     if (color == BLACK_CHESS) {
         QMessageBox mb;
         mb.setWindowTitle(tr("Black Win!"));
@@ -259,7 +250,7 @@ void onlinegame::respondWin(int color) { // 回应棋局结束
     } else if (color == NO_CHESS) {
     }
 }
-void onlinegame::respondRetract() { // 回应悔棋请求
+void onlinegame::respondRetract() {
     QMessageBox mb;
     mb.setWindowTitle(tr("REQUEST"));
     mb.setText(tr("The rival request to retract!"));

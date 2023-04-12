@@ -4,13 +4,6 @@
 #include "../lib/openjson/openjson.h"
 #include "lobby.h"
 #include "onlinegame.h"
-#include "threadpool.h"
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <qobject.h>
-#include <string>
-// #include <sys/errno.h>
 
 #ifdef WIN32
 #include <windows.h>
@@ -39,36 +32,34 @@ class tcpclient {
     int sockfd;
 #endif
     open::OpenJson json;
-    threadpool pool;
 
   public:
     tcpclient();
     int getSockFD() { return sockfd; }
-    bool connectToServer(); // 连接服务器
-    void closesocket();     // 关闭socket
-    void disconnect();      // 断开连接
+    bool connectToServer(); // connect to server
+    void closesocket();     // close socket
+    void disconnect();      // disconnect to server
 
   public:
-    void static parseInformation(
-        onlinegame &Game, lobby &Lobby,
-        std::string buff); // 接收服务端发来的信息并解析并做出反应
+    void static parseInformation(onlinegame &Game, lobby &Lobby,
+                                 std::string buff); // Receive and parse info
 
     // slots：
-    bool joinLobby();            // 进入大厅
-    void createRoom();           // 进入房间
-    void joinRoom(int roomID);   // 加入房间
-    void watchMatch(int roomID); // 观看比赛
+    bool joinLobby();            // join lobby
+    void createRoom();           // create a room
+    void joinRoom(int roomID);   // join a room
+    void watchMatch(int roomID); // watch a game
 
-    void quitLobby(); // 退出大厅，断开连接
-    void quitRoom();  // 退出房间，回到大厅
+    void quitLobby(); // quit lobby and disconnect to server
+    void quitRoom();  // quit room and go to lobby
 
-    void prepared();                 // 准备
-    void drop(int x, int y);         // 落子
-    void requestRetract();           // 悔棋
-    void repondRetract(bool anwser); // 应答悔棋
-    void exit();                     // 退出
-    void concede();                  // 认输
-    void restartGame();              // 重新开始游戏
+    void prepared();                 // prepare
+    void drop(int x, int y);         // drop
+    void requestRetract();           // retract
+    void repondRetract(bool anwser); // respond retracting
+    void exit();                     // exit
+    void concede();                  // concede
+    void restartGame();              // restart a game
 };
 
 #endif // TCPCLIENT_H

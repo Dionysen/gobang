@@ -5,33 +5,25 @@
 #include "settingdialog.h"
 #include "ui_game.h"
 #include <iostream>
-#include <qbrush.h>
-#include <qcolor.h>
-#include <qevent.h>
-#include <qmessagebox.h>
-#include <qobjectdefs.h>
-#include <qpen.h>
-#include <string>
-#include <tuple>
 
 game::game(QWidget *parent) : QWidget(parent), ui(new Ui::game) {
 
     ui->setupUi(this);
     this->setMouseTracking(true);
 
-    setDia = new SettingDialog(this);
-
+    // robot's initial
     ChessEngine::beforeStart();
     ChessEngine::setLevel(4);
     ChessEngine::reset(0);
     humanTurn = BLACK_CHESS;
 
+    setDia = new SettingDialog(this);
     robotThread = new robotthread(this);
 
-    // dialog
+    // settting dialog
     connect(setDia, &SettingDialog::signalAcceptResult, this,
             [=](int diff, int color, QString time) {
-                // color 白色是0,黑色是1
+                // color: white = 0, black = 1
                 ChessEngine::setLevel(diff + 1);
                 ChessEngine::reset(color);
                 humanTurn = color;
@@ -40,7 +32,7 @@ game::game(QWidget *parent) : QWidget(parent), ui(new Ui::game) {
                 newGame();
             });
 
-    // 按钮信号连接
+    // connection
     connect(ui->backBtn, &QPushButton::clicked, this,
             [=] { emit signalBackToHome(); });
 
@@ -49,11 +41,12 @@ game::game(QWidget *parent) : QWidget(parent), ui(new Ui::game) {
     connect(ui->replayBtn, &QPushButton::clicked, this, [=] { replay(); });
     connect(ui->concedeBtn, &QPushButton::clicked, this, [=] { concede(); });
 
-    // 子线程
-    connect(this, &game::siganlRobotDrop, robotThread,
-            &robotthread::isTurn); // 轮到机器人，发送信号，调用isTurn下棋
+    // child thread
+    connect(
+        this, &game::siganlRobotDrop, robotThread,
+        &robotthread::isTurn); // turn to robot, emit the signal, and robot drop
     connect(robotThread, &robotthread::signalSendPosition,
-            this, // 响应机器人下棋结束
+            this, // respond droping by robot
             [=](int x, int y) {
                 drop(x, y);
                 update();
@@ -63,10 +56,11 @@ game::game(QWidget *parent) : QWidget(parent), ui(new Ui::game) {
 
 game::~game() { delete ui; }
 
-/* 重写事件函数 */
+/* override event funciton */
+
 void game::paintEvent(QPaintEvent *event) {
 
-    QPainter paint(this); // 创建画家对象
+    QPainter paint(this); // create a painter
     QColor backgroundColor(240, 217, 195);
     QColor boardBackgroundColor(206, 178, 152);
 
@@ -81,20 +75,23 @@ void game::paintEvent(QPaintEvent *event) {
     // paint.drawRect(POS - WIDTH / 2, POS - WIDTH / 2, 15 * WIDTH, 15 * WIDTH);
     // paint.drawRect(POS, POS, 14 * WIDTH, 14 * WIDTH);
 
-    paint.setPen(QPen(QColor(Qt::black), 1)); // 设置画笔，黑色，宽度为1
-    for (int i = 0; i < ROW_COLUM; i++) {     // 画出棋盘
+    paint.setPen(
+        QPen(QColor(Qt::black), 1));      // set pen: color: black, width: 1px
+    for (int i = 0; i < ROW_COLUM; i++) { // paint chessboard
         paint.drawLine(POS + i * WIDTH, POS, POS + i * WIDTH, POS + 14 * WIDTH);
     }
     for (int i = 0; i < ROW_COLUM; i++) {
         paint.drawLine(POS, POS + i * WIDTH, POS + 14 * WIDTH, POS + i * WIDTH);
     }
-    // 加深边框
+
+    // Deepen the border
     paint.setPen(QPen(QColor(Qt::black), 2));
     paint.drawLine(POS, POS, POS + 14 * WIDTH, POS);
     paint.drawLine(POS, POS, POS, POS + 14 * WIDTH);
     paint.drawLine(POS + 14 * WIDTH, POS, POS + 14 * WIDTH, POS + 14 * WIDTH);
     paint.drawLine(POS, POS + 14 * WIDTH, POS + 14 * WIDTH, POS + 14 * WIDTH);
-    // 加上定位点
+
+    // Plus anchors
     paint.setBrush(Qt::black);
     paint.drawEllipse(POS + 3 * WIDTH - POS_SIZE, POS + 3 * WIDTH - POS_SIZE,
                       POS_SIZE * 2, POS_SIZE * 2);
@@ -107,8 +104,7 @@ void game::paintEvent(QPaintEvent *event) {
     paint.drawEllipse(POS + 7 * WIDTH - POS_SIZE, POS + 7 * WIDTH - POS_SIZE,
                       POS_SIZE * 2, POS_SIZE * 2);
 
-    // 绘制已存在的棋子
-
+    // paint chesses that already exist
     for (int i = 0; i < 15; ++i) {
         for (int j = 0; j < 15; ++j) {
             if (positionStatus[i][j] == BLACK_CHESS) {
@@ -126,7 +122,8 @@ void game::paintEvent(QPaintEvent *event) {
             }
         }
     }
-    // 绘制悬空棋子
+
+    // paint chesses hovering
     if (hoverPosition.x() >= 0 && hoverPosition.x() < 15 &&
         hoverPosition.y() >= 0 && hoverPosition.y() < 15) {
         bool isExist = false;
@@ -156,7 +153,8 @@ void game::paintEvent(QPaintEvent *event) {
     }
     paint.end();
 }
-void game::mouseReleaseEvent(QMouseEvent *event) // 检测鼠标施放信号
+void game::mouseReleaseEvent(
+    QMouseEvent *event) // Detect cursor position and operator
 {
     if (event->button() == Qt::LeftButton && humanTurn == turn) {
         int x = (event->pos().x() - POS + WIDTH / 2) / WIDTH;
@@ -184,7 +182,7 @@ void game::mouseMoveEvent(QMouseEvent *event) {
     }
 }
 
-/* 接口 */
+/* Interface */
 
 bool game::isGaming() { return m_isGaming; }
 
@@ -204,8 +202,8 @@ void game::setTurn(int turn) { this->turn = turn; }
 void game::setStep(int step) { this->step = step; }
 void game::setGameStatus(bool isGaming) { m_isGaming = isGaming; }
 
-/* 对局操作 */
-void game::newGame() // 新对局，初始化棋局
+/* Operator */
+void game::newGame() // New Game
 {
     m_board.clear();
     turn = BLACK_CHESS;
@@ -236,15 +234,15 @@ void game::drop(int x, int y) {
                 isExist = true;
         }
         if (!isExist) {
-            currentChess = chess(x, y, turn, step); // 创建新的棋子
-            m_board.push_back(currentChess);        // 向棋盘中添加棋子
-            positionStatus[x][y] = turn;            // 更新位置信息
+            currentChess = chess(x, y, turn, step); // Create a new chess
+            m_board.push_back(currentChess);        // add chess to board
+            positionStatus[x][y] = turn;            // update position
             step++;
             turnToNext();
         }
     }
 }
-void game::retract() // 悔棋
+void game::retract() // retract
 {
     if (turn != humanTurn) {
         QMessageBox mb;
@@ -321,7 +319,7 @@ void game::turnToNext() {
         turn = BLACK_CHESS;
 }
 
-int game::isWin(int x, int y) // 判断输赢
+int game::isWin(int x, int y) // Judge winner
 {
     for (int i = -4; i <= 0; i++) {
         if (positionStatus[x + i][y] == currentChess.getColor() &&
@@ -362,7 +360,7 @@ int game::isWin(int x, int y) // 判断输赢
     return NO_CHESS;
 }
 
-void game::respondWin(int player) // 响应输赢
+void game::respondWin(int player) // respond win
 {
 
     if (player == BLACK_CHESS) {

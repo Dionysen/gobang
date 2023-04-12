@@ -1,7 +1,5 @@
 #include "home.h"
 #include "ui_home.h"
-#include <qobjectdefs.h>
-#include <unistd.h>
 
 home::home(QWidget *parent) : QWidget(parent), ui(new Ui::home) {
     ui->setupUi(this);

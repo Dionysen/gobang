@@ -1,9 +1,9 @@
 #ifndef ROBOTTHREAD_H
 #define ROBOTTHREAD_H
 
+#include <QPoint>
 #include <QThread>
 #include <iostream>
-#include <qpoint.h>
 
 class robotthread : public QThread {
     Q_OBJECT

@@ -10,9 +10,6 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
-#include <QPushButton>
-#include <iostream>
-#include <thread>
 
 #ifdef WIN32
 #include <windows.h>
@@ -37,9 +34,9 @@ class MainWindow : public QMainWindow {
     onlinegame *OnlineGame = new onlinegame(this);
     tcpclient tcpClient;
 
-    void static parseThreadHandle(onlinegame &OnlineGame, lobby &Lobby,
-                                  int connfd, tcpclient &tcpClient,
-                                  threadpool &pool);
+    // void static parseThreadHandle(onlinegame &OnlineGame, lobby &Lobby,
+    //                               int connfd, tcpclient &tcpClient,
+    //                               threadpool &pool);
 
   private slots:
 
@@ -56,6 +53,6 @@ class MainWindow : public QMainWindow {
 
   private:
     Ui::MainWindow *ui;
-    threadpool pool;
+    // threadpool pool;
 };
 #endif // MAINWINDOW_H

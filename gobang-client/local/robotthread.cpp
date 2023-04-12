@@ -9,7 +9,7 @@
 robotthread::robotthread(QObject *parent)
     : QThread(parent), currentPos(QPoint(-1, -1)) {}
 
-void robotthread::run() {
+void robotthread::run() { // robot drop and get the position
     ChessEngine::nextStep(currentPos.x(), currentPos.y());
     emit signalSendPosition(ChessEngine::getLastPosition().x,
                             ChessEngine::getLastPosition().y);

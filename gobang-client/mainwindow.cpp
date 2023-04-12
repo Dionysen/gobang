@@ -5,27 +5,13 @@
 #include "onlinegame.h"
 #include "recvthread.h"
 #include "tcpclient.h"
-#include "threadpool.h"
-#include <cstddef>
-#include <functional>
-#include <iostream>
-#include <ostream>
-#include <qaction.h>
-#include <qevent.h>
-#include <qobjectdefs.h>
-#include <qpolygon.h>
-#include <qpushbutton.h>
-#include <sched.h>
-#include <string>
-#include <thread>
-#include <unistd.h>
 
-void handle(int a, int b) {}
+// #include "threadpool.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    pool.init();
+    // pool.init();
     this->setFixedSize(1000, 750);
 
     ui->stackedWidget->addWidget(Home);
@@ -33,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->stackedWidget->addWidget(Game);
     ui->stackedWidget->addWidget(OnlineGame);
 
-    // 主窗口的信号连接
+    // Mainwindow connection
     connect(ui->actionNew_Game, SIGNAL(triggered(bool)), this,
             SLOT(toGamePage()));
     connect(ui->actionBack, SIGNAL(triggered(bool)), this, SLOT(backToHome()));
@@ -41,15 +27,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionRetract, &QAction::triggered, Game, &game::retract);
     connect(ui->actionRobot_Setting, &QAction::triggered, Game, &game::setting);
 
-    // 主菜单的信号连接
+    // Home connection
     connect(Home, SIGNAL(signalNewGame()), this, SLOT(toGamePage()));
     // connect(Home, SIGNAL(signalHelp()), this, SLOT(help()));
     connect(Home, SIGNAL(signalExit()), this, SLOT(exit()));
 
-    // 游戏大厅的信号连接
+    // Lobby connection
     connect(Lobby, SIGNAL(signalBackToHomeNoAsk()), this,
             SLOT(backToHomeNoAsk()));
-    connect(Lobby, &lobby::signalWatchMatch, this, [=] { // 观战
+    connect(Lobby, &lobby::signalWatchMatch, this, [=] {
         if (Lobby->getRoomID() != -1) {
             OnlineGame->newGame();
             OnlineGame->status = WATCHING;
@@ -73,15 +59,15 @@ MainWindow::MainWindow(QWidget *parent)
     connect(Lobby, SIGNAL(signalCreateRoom()), this, SLOT(createRoom()));
     connect(Lobby, SIGNAL(siganlJoinRoom()), this, SLOT(joinRoom()));
 
-    // 游戏信号
+    // Game
 
     connect(Game, &game::signalBackToHome, this, &MainWindow::backToHome);
-    connect(Game, &game::signalBackNoAsk, this, [=] { // 直接回到首页
+    connect(Game, &game::signalBackNoAsk, this, [=] { // back to home directly
         ui->stackedWidget->setCurrentWidget(Home);
         Game->newGame();
     });
 
-    // 对战游戏
+    // Online Game
     connect(OnlineGame, &onlinegame::signalPrepare, this,
             [=] { tcpClient.prepared(); });
 
@@ -90,7 +76,7 @@ MainWindow::MainWindow(QWidget *parent)
                        OnlineGame->getCurrentChess().y());
     });
 
-    connect(OnlineGame, &onlinegame::signalBack, this, [=] { // 回到大厅
+    connect(OnlineGame, &onlinegame::signalBack, this, [=] { // back to lobby
         if (ui->stackedWidget->currentWidget() == Lobby) {
 
         } else {
@@ -161,7 +147,7 @@ MainWindow::MainWindow(QWidget *parent)
         }
     });
 
-    // 子线程，用以处理消息，也可以使用线程池处理消息
+    // child thread, it can also use thread pool processing
     recvthread *recvThread = new recvthread(this);
 
     connect(Home, &home::signalConnectToServer, this, [=] {
@@ -217,7 +203,7 @@ MainWindow::MainWindow(QWidget *parent)
 //         if (isize <= 0) {
 //             break;
 //         }
-//         std::cout << "子线程收到消息：" << buff << std::endl;
+//
 //         pool.submit(tcpClient.parseInformation, std::ref(OnlineGame),
 //                     std::ref(Lobby), std::string(buff));
 //     }
@@ -242,8 +228,8 @@ void MainWindow::backToHome() {
         mb.setDefaultButton(QMessageBox::Yes);
         switch (mb.exec()) {
         case QMessageBox::Yes:
-            Game->setGameStatus(false);                // 游戏状态设置为0
-            ui->stackedWidget->setCurrentWidget(Home); // 显示主界面
+            Game->setGameStatus(false);                // Set not game
+            ui->stackedWidget->setCurrentWidget(Home); // back to home
             break;
         case QMessageBox::No:
             break;
@@ -277,8 +263,10 @@ void MainWindow::exit() {
     }
 }
 
-void MainWindow::
-    createRoom() // 发送创建房间的信息，接收大厅信息，更新显示，设置当前widget为game，设置自身执黑棋
+void MainWindow::createRoom() // Send the information of creating a room,
+                              // receive the lobby information, update the
+                              // display, set the current widget to game, and
+                              // set yourself to play black chess
 {
     OnlineGame->newGame();
     tcpClient.createRoom();
@@ -288,8 +276,10 @@ void MainWindow::
     OnlineGame->updateRoomInfo();
 }
 
-void MainWindow::
-    joinRoom() // 发送加入房间信息，接收大厅信息，更新显示，设置当前widget为game，设置自身执白棋
+void MainWindow::joinRoom() // Send join room information, receive lobby
+                            // information, update display, set the current
+                            // widget to game, and set yourself to play white
+                            // chess
 {
     int num = Lobby->getRoomNumOfPlayers();
     if (-1 != Lobby->getRoomID()) {
@@ -330,10 +320,11 @@ void MainWindow::
     }
 }
 
-void MainWindow::dropChess() // 下棋
+void MainWindow::dropChess() // drop
 {
     tcpClient.drop(
         OnlineGame->getCurrentChess().x(),
         OnlineGame->getCurrentChess()
-            .y()); // 使用Game中的getpoint获取当前棋子的位置，传递给tcpclient下棋
+            .y()); // Use getpoint in the game to get the position of the
+                   // current piece and pass it to tcpclient to play chess
 }
