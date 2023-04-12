@@ -1,2 +1,4 @@
 /gobang-client/build/*
+/gobang-client/.cache/*
 /gobang-server/build/*
+/gobang-server/.cache/*
