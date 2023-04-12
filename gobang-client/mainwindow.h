@@ -5,6 +5,7 @@
 #include "home.h"
 #include "lobby.h"
 #include "onlinegame.h"
+#include "recvthread.h"
 #include "tcpclient.h"
 // #include "threadpool.h"
 
@@ -38,6 +39,9 @@ class MainWindow : public QMainWindow {
     //                               int connfd, tcpclient &tcpClient,
     //                               threadpool &pool);
 
+  protected:
+    void closeEvent(QCloseEvent *event);
+
   private slots:
 
     void backToHome();
@@ -53,6 +57,7 @@ class MainWindow : public QMainWindow {
 
   private:
     Ui::MainWindow *ui;
+    recvthread *recvThread = new recvthread(this);
     // threadpool pool;
 };
 #endif // MAINWINDOW_H

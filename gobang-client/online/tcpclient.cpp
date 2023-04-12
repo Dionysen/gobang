@@ -122,7 +122,10 @@ void tcpclient::parseInformation(onlinegame &OnlineGame, lobby &Lobby,
 
     } else if (head.compare("request") == 0) {
         // Rival request
-        OnlineGame.respondRetract();
+        if (json["type"].s().compare("retract") == 0)
+            OnlineGame.respondRetract();
+        else if (json["type"].s().compare("replay") == 0)
+            OnlineGame.respondReplay();
     } else if (head.compare("respond") == 0) {
         // nothing
     } else if (head.compare("user") == 0) { // Update User Info
@@ -209,11 +212,14 @@ void tcpclient::drop(int x, int y) // Send chess position
 
 void tcpclient::quitLobby() // quit lobby
 {
+    json.clear();
+    json["action"] = "quitLobby";
+    std::string buff = json.encode();
+    send(sockfd, buff.data(), buff.size(), 0);
     disconnect();
 }
 
 void tcpclient::quitRoom() {
-
     json.clear();
     json["action"] = "quitRoom";
     std::string buff = json.encode();
@@ -232,6 +238,23 @@ void tcpclient::repondRetract(bool anwser) {
     json.clear();
     json["action"] = "respond";
     json["type"] = "retract";
+    json["anwser"] = anwser;
+    std::string buff = json.encode();
+    send(sockfd, buff.data(), buff.size(), 0);
+}
+
+void tcpclient::requestReplay() {
+    json.clear();
+    json["action"] = "request";
+    json["type"] = "replay";
+    std::string buff = json.encode();
+    send(sockfd, buff.data(), buff.size(), 0);
+}
+
+void tcpclient::repondReplay(bool anwser) {
+    json.clear();
+    json["action"] = "respond";
+    json["type"] = "replay";
     json["anwser"] = anwser;
     std::string buff = json.encode();
     send(sockfd, buff.data(), buff.size(), 0);

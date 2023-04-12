@@ -84,13 +84,16 @@ void gobangserver::updateInfo() { // From player information, update to lobby
 }
 
 void gobangserver::sentInfo(int connfd) {
-    updateInfo();         // Update game state
-    sentLobbyInfo();      // Send lobby messages to everyone
-    sentUserInfo();       // Send your own information to all users
-    sentRoomInfo(connfd); // If the user is in the room, the room information is
-                          // sent to both contestants and all spectators
-    sentMatchInfo(connfd); // If the user is in the room, match information is
-                           // sent to both players and all spectators
+    if (players.find(connfd) != players.end()) {
+        updateInfo();    // Update game state
+        sentLobbyInfo(); // Send lobby messages to everyone
+        sentUserInfo();  // Send your own information to all users
+        sentRoomInfo(
+            connfd); // If the user is in the room, the room information is
+                     // sent to both contestants and all spectators
+        sentMatchInfo(connfd); // If the user is in the room, match information
+                               // is sent to both players and all spectators
+    }
 }
 
 void gobangserver::sentLobbyInfo() {
@@ -401,9 +404,13 @@ void gobangserver::parseInfo(int connfd, char buff[1024]) {
         if (json["type"].s().compare("retract") == 0) // Ask for repentance
             // Send a repentance request
             requestRetract(connfd);
+        else if (json["type"].s().compare("replay") == 0)
+            requestReplay(connfd);
     } else if (action.compare("respond") == 0) { // The signal is a response
         if (json["type"].s().compare("retract") == 0) // Respond to Repentance
             respondRetract(connfd, json["anwser"].b());
+        else if (json["type"].s().compare("replay") == 0)
+            respondReplay(connfd, json["anwser"].b());
     } else if (action.compare("concede") ==
                0) { // The signal is to throw in the towel
         if (getRoom(connfd)->second.whitePlayer->m_connfd == connfd) {
@@ -453,16 +460,51 @@ void gobangserver::requestRetract(int connfd) {
     std::cout << "[Send request Info: " << buff << std::endl;
 }
 
+void gobangserver::requestReplay(int connfd) {
+    std::string buff{};
+    json.clear();
+    json["head"] = "request";
+    json["type"] = "replay";
+    buff = json.encode();
+
+    memset(sendMsg, 0, sizeof(sendMsg));
+    len = strlen(buff.c_str());
+    memcpy(sendMsg, &len, sizeof(int));
+    memcpy(sendMsg + sizeof(int), buff.c_str(), len);
+    send(findRival(connfd), sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
+    std::cout << "[Send request Info: " << buff << std::endl;
+}
+
 void gobangserver::respondRetract(int connfd, bool anwser) {
     if (anwser) {
         retract(connfd);
-        sentMatchInfo(connfd);
+        // sentMatchInfo(connfd);
         std::cout << "Retract finished\n";
     }
     std::string buff{};
     json.clear();
     json["head"] = "respond";
     json["type"] = "retract";
+    json["anwser"] = anwser;
+    buff = json.encode();
+
+    memset(sendMsg, 0, sizeof(sendMsg));
+    len = strlen(buff.c_str());
+    memcpy(sendMsg, &len, sizeof(int));
+    memcpy(sendMsg + sizeof(int), buff.c_str(), len);
+    send(findRival(connfd), sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
+
+    std::cout << "[Send request Info: " << buff << std::endl;
+}
+
+void gobangserver::respondReplay(int connfd, bool anwser) {
+    if (anwser) {
+        restart(connfd);
+    }
+    std::string buff{};
+    json.clear();
+    json["head"] = "respond";
+    json["type"] = "replay";
     json["anwser"] = anwser;
     buff = json.encode();
 
@@ -568,7 +610,6 @@ void gobangserver::quitLobby(int connfd) {
         delete iter->second;
         iter->second = nullptr;
         players.erase(iter++);
-        // tcpServer.closeClient();
     }
 }
 

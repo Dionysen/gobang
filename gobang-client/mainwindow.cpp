@@ -3,8 +3,10 @@
 #include "game.h"
 #include "lobby.h"
 #include "onlinegame.h"
-#include "recvthread.h"
+
 #include "tcpclient.h"
+#include <qmessagebox.h>
+#include <qobjectdefs.h>
 
 // #include "threadpool.h"
 
@@ -33,8 +35,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(Home, SIGNAL(signalExit()), this, SLOT(exit()));
 
     // Lobby connection
-    connect(Lobby, SIGNAL(signalBackToHomeNoAsk()), this,
-            SLOT(backToHomeNoAsk()));
+    connect(Lobby, &lobby::signalBackToHomeNoAsk, this, [=] {
+        recvThread->terminate();
+        emit backToHomeNoAsk();
+    });
     connect(Lobby, &lobby::signalWatchMatch, this, [=] {
         if (Lobby->getRoomID() != -1) {
             OnlineGame->newGame();
@@ -42,18 +46,9 @@ MainWindow::MainWindow(QWidget *parent)
             tcpClient.watchMatch(Lobby->getRoomID());
             OnlineGame->update();
         } else {
-            QMessageBox mb;
-            mb.setWindowTitle(tr("WATCH"));
-            mb.setText(tr("Error!"));
-            mb.setInformativeText(tr("Please select a room to watch!"));
-            mb.setStandardButtons(QMessageBox::Ok | QMessageBox::Default);
-            mb.setDefaultButton(QMessageBox::Yes);
-            switch (mb.exec()) {
-            case QMessageBox::Yes:
-                break;
-            default:
-                break;
-            }
+            QMessageBox::information(this, "WATCH",
+                                     "Please select a room to watch!",
+                                     QMessageBox::Ok, QMessageBox::Ok);
         }
     });
     connect(Lobby, SIGNAL(signalCreateRoom()), this, SLOT(createRoom()));
@@ -62,10 +57,11 @@ MainWindow::MainWindow(QWidget *parent)
     // Game
 
     connect(Game, &game::signalBackToHome, this, &MainWindow::backToHome);
-    connect(Game, &game::signalBackNoAsk, this, [=] { // back to home directly
-        ui->stackedWidget->setCurrentWidget(Home);
-        Game->newGame();
-    });
+    connect(Game, &game::signalBackNoAsk, this,
+            [=] { // back to home directly
+                ui->stackedWidget->setCurrentWidget(Home);
+                Game->newGame();
+            });
 
     // Online Game
     connect(OnlineGame, &onlinegame::signalPrepare, this,
@@ -76,14 +72,14 @@ MainWindow::MainWindow(QWidget *parent)
                        OnlineGame->getCurrentChess().y());
     });
 
-    connect(OnlineGame, &onlinegame::signalBack, this, [=] { // back to lobby
-        if (ui->stackedWidget->currentWidget() == Lobby) {
-
-        } else {
-            ui->stackedWidget->setCurrentWidget(Lobby);
-            tcpClient.quitRoom();
-        }
-    });
+    connect(OnlineGame, &onlinegame::signalBack, this,
+            [=] { // back to lobby
+                if (ui->stackedWidget->currentWidget() == Lobby) {
+                } else {
+                    ui->stackedWidget->setCurrentWidget(Lobby);
+                    tcpClient.quitRoom();
+                }
+            });
 
     connect(OnlineGame, &onlinegame::signalBackToLobby, this,
             [=] { ui->stackedWidget->setCurrentWidget(Lobby); });
@@ -93,32 +89,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(OnlineGame, &onlinegame::signalRequestRetract, this, [=] {
         if (OnlineGame->selfTurn && !OnlineGame->isEmptyBoard()) {
-            QMessageBox mb;
-            mb.setWindowTitle(tr("RETRACT"));
-            mb.setText(tr("Error!"));
-            mb.setInformativeText(
-                tr("You can retract only in the rival turn!"));
-            mb.setStandardButtons(QMessageBox::Ok | QMessageBox::Default);
-            mb.setDefaultButton(QMessageBox::Yes);
-            switch (mb.exec()) {
-            case QMessageBox::Yes:
-                break;
-            default:
-                break;
-            }
+            QMessageBox::information(
+                this, "RETRACT",
+                "Error!\nYou can retract only in the rival turn!");
         } else if (OnlineGame->isEmptyBoard()) {
-            QMessageBox mb;
-            mb.setWindowTitle(tr("RETRACT"));
-            mb.setText(tr("Error!"));
-            mb.setInformativeText(tr("Chess board is empty!"));
-            mb.setStandardButtons(QMessageBox::Ok | QMessageBox::Default);
-            mb.setDefaultButton(QMessageBox::Yes);
-            switch (mb.exec()) {
-            case QMessageBox::Yes:
-                break;
-            default:
-                break;
-            }
+            QMessageBox::information(this, "RETRACT",
+                                     "Error!\nChess board is empty!");
         } else if (!OnlineGame->isEmptyBoard() && !OnlineGame->selfTurn) {
             tcpClient.requestRetract();
         }
@@ -126,6 +102,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(OnlineGame, &onlinegame::signalRespondRetract, this,
             [=](bool anwser) { tcpClient.repondRetract(anwser); });
+
+    connect(OnlineGame, &onlinegame::signalRequestReplay, this,
+            [=] { tcpClient.requestReplay(); });
+
+    connect(OnlineGame, &onlinegame::signalRespondReplay, this,
+            [=](bool anwser) { tcpClient.repondReplay(anwser); });
 
     connect(OnlineGame, &onlinegame::signalRestartGame, this,
             [=] { tcpClient.restartGame(); });
@@ -148,24 +130,12 @@ MainWindow::MainWindow(QWidget *parent)
     });
 
     // child thread, it can also use thread pool processing
-    recvthread *recvThread = new recvthread(this);
 
     connect(Home, &home::signalConnectToServer, this, [=] {
         if (!tcpClient.joinLobby()) {
-            QMessageBox mb;
-            mb.setWindowTitle(tr("ERROR"));
-            mb.setText(tr("Connect error!"));
-            mb.setInformativeText(
-                tr("Failed to connect to server, please check "
-                   "your internet and try it again."));
-            mb.setStandardButtons(QMessageBox::Yes | QMessageBox::Default);
-            mb.setDefaultButton(QMessageBox::Yes);
-            switch (mb.exec()) {
-            case QMessageBox::Yes:
-                break;
-            default:
-                break;
-            }
+            QMessageBox::critical(this, "Connect error!",
+                                  "Failed to connect to server, please check "
+                                  "your internet and try it again.");
         } else {
             ui->stackedWidget->setCurrentWidget(Lobby);
             Lobby->updateTable();
@@ -174,7 +144,8 @@ MainWindow::MainWindow(QWidget *parent)
         }
 
         // std::thread recvInfoThread(&MainWindow::parseThreadHandle,
-        //                            std::ref(*OnlineGame), std::ref(*Lobby),
+        //                            std::ref(*OnlineGame),
+        //                            std::ref(*Lobby),
         //                            tcpClient.getSockFD(),
         //                            std::ref(tcpClient), std::ref(pool));
         // std::thread recvInfoThread(handle, 1, 12);
@@ -211,6 +182,26 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow() { delete ui; }
 
+void MainWindow::closeEvent(QCloseEvent *event) {
+    if (ui->stackedWidget->currentWidget() == Lobby ||
+        ui->stackedWidget->currentWidget() == OnlineGame) {
+
+        QMessageBox::StandardButton result = QMessageBox::question(
+            this, "EXIT",
+            "Exiting now will disconnect the server and will "
+            "not preserve the current match!",
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No);
+
+        if (result == QMessageBox::Yes) {
+            recvThread->terminate();
+            tcpClient.quitLobby();
+            event->accept();
+        } else {
+            event->ignore();
+        }
+    }
+}
+
 void MainWindow::toGamePage() {
     ui->stackedWidget->setCurrentWidget(Game);
     Game->newGame();
@@ -218,15 +209,10 @@ void MainWindow::toGamePage() {
 
 void MainWindow::backToHome() {
     if (Game->isGaming()) {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("BACK"));
-        mb.setText(tr("Back to home!"));
-        mb.setInformativeText(tr("Are you sure you want to back? "
-                                 "Game status will not be saved."));
-        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No |
-                              QMessageBox::Default);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
+        switch (QMessageBox::question(
+            this, "BACK",
+            "Are you sure you want to back? Game status will not be saved.",
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No)) {
         case QMessageBox::Yes:
             Game->setGameStatus(false);                // Set not game
             ui->stackedWidget->setCurrentWidget(Home); // back to home
@@ -245,14 +231,9 @@ void MainWindow::backToHomeNoAsk() {
 }
 
 void MainWindow::exit() {
-    QMessageBox mb;
-    mb.setWindowTitle(tr("EXIT"));
-    mb.setText(tr("Exit!"));
-    mb.setInformativeText(tr("Are you sure you want to quit game?"));
-    mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No |
-                          QMessageBox::Default);
-    mb.setDefaultButton(QMessageBox::Yes);
-    switch (mb.exec()) {
+    switch (QMessageBox::question(
+        this, "EXIT", "Are you sure you want to quit game?",
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No)) {
     case QMessageBox::Yes:
         return ::exit(0);
         break;
@@ -291,32 +272,13 @@ void MainWindow::joinRoom() // Send join room information, receive lobby
             OnlineGame->setSelfColor(WHITE_CHESS);
             OnlineGame->updateRoomInfo();
         } else {
-            QMessageBox mb;
-            mb.setWindowTitle(tr("JOIN"));
-            mb.setText(tr("Room is already full!"));
-            mb.setInformativeText(tr("Please select another room!"));
-            mb.setStandardButtons(QMessageBox::Yes | QMessageBox::Default);
-            mb.setDefaultButton(QMessageBox::Yes);
-            switch (mb.exec()) {
-            case QMessageBox::Yes:
-                break;
-            default:
-                break;
-            }
+            QMessageBox::critical(
+                this, "JOIN",
+                "Room is already full!\nPlease select another room!");
         }
     } else {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("JOIN"));
-        mb.setText(tr("Invaild room!"));
-        mb.setInformativeText(tr("Please select a room!"));
-        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::Default);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
-        case QMessageBox::Yes:
-            break;
-        default:
-            break;
-        }
+        QMessageBox::critical(this, "JOIN",
+                              "Invaild room!\nPlease select a room!");
     }
 }
 

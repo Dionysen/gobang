@@ -13,6 +13,7 @@
 #include <QPainter>
 #include <QWidget>
 #include <iostream>
+#include <qevent.h>
 #include <string>
 #include <vector>
 
@@ -76,6 +77,7 @@ class game : public QWidget {
   protected:
     void paintEvent(QPaintEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
 
   signals:

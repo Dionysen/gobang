@@ -27,7 +27,6 @@ bool tcpserver::initServer(const unsigned int port) {
     if (result == -1) {
         throw "Failed to change nagle status\n";
     }
-    std::cout << "finished\n";
 
     bzero(&m_servaddr, sizeof(m_servaddr)); // Zero the socket fd
     m_servaddr.sin_family = AF_INET;        // IPv4

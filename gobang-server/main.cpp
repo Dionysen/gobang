@@ -27,7 +27,8 @@ int main() {
         }
         for (int i = 0; i < maxfd; i++) {
             int fd = evs[i].data.fd;
-            // 如果是监听的fd受到消息，则表示有客户端连接
+            // If the fd that is listening receives the message, it means that
+            // there is a client connection
             if (fd == gobangServer.tcpServer.m_sockfd) {
                 struct sockaddr_in client_addr;
                 socklen_t client_addr_len = sizeof(client_addr);
@@ -40,7 +41,7 @@ int main() {
                     continue;
                 }
 
-                // 将客户端的socket加入epoll
+                // Add the client's socket to the epoll
                 struct epoll_event ev_client;
                 ev_client.events = EPOLLIN;
                 ev_client.data.fd = client_sockfd;
@@ -51,16 +52,17 @@ int main() {
                 }
                 std::cout << client_addr.sin_addr.s_addr << " is connecting\n";
 
-                // 保存客户端的信息
+                // Saves information for the client
                 gobangServer.players[client_sockfd] = new player(client_sockfd);
-            } else { // 如果客户端传来消息
+            } else { // If a message comes from the client
                 char buff[1024];
                 ssize_t isize = recv(fd, buff, 1024, 0);
                 std::cout << "revc:(size = " << isize << ") " << buff
                           << std::endl;
-                if (isize < 0) { // 小于零，异常
+                if (isize < 0) { // Less than zero, exception
                     break;
-                } else if (isize == 0) { // 等于零说明断开连接
+                } else if (isize ==
+                           0) { // Equal to zero indicates disconnection
                     std::cout << "Client " << fd << " disconnect\n";
                     close(fd);
                     epoll_ctl(gobangServer.tcpServer.epld, EPOLL_CTL_DEL, fd,
@@ -83,7 +85,7 @@ int main() {
     return 0;
 }
 
-void stopServerRunning(int p) { // 使用ctrl + c 退出服务
+void stopServerRunning(int p) { // Use ctrl + c to stop server
     gobangServer.tcpServer.closeClient();
     std::cout << "\nStop Server ..." << std::endl;
     exit(0);

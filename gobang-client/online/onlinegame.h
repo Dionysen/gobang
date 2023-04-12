@@ -52,6 +52,7 @@ class onlinegame : public QWidget {
     void updateRoomInfo();             // Update room information
     void respondWin(int color);        // Respond win
     void respondRetract();             // Respond requestion for restracting
+    void respondReplay();              // Respond requestion for replay
 
     void setBlackId(int id) { m_blackPlayerId = id; }
     void setBlackName(std::string name) { m_blackPlayerName = name; }
@@ -94,12 +95,14 @@ class onlinegame : public QWidget {
     void signalPrepare();                   // Prepare
     void signalRequestRetract();            // Request retracting
     void signalRespondRetract(bool anwser); // Respond retracting
+    void signalRequestReplay();             // Request replay
+    void signalRespondReplay(bool anwser);  // Respond replay
     void signalConcede();                   // Concede
     void signalBack();                      // Back
     void signalBackToLobby();               // Back to lobby
-    void signalReplay();                    // Replay
-    void signalRestartGame();               // Restart a new game
-    void siganlUpdateUserInfo();            // Update user info
+    // void signalReplay();
+    void signalRestartGame();    // Restart a new game
+    void siganlUpdateUserInfo(); // Update user info
 };
 
 #endif // ONLINEGAME_H

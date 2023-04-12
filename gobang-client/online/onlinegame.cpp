@@ -1,6 +1,8 @@
 #include "onlinegame.h"
 #include "chess.h"
 #include "ui_onlinegame.h"
+#include <iostream>
+#include <qmessagebox.h>
 
 onlinegame::onlinegame(QWidget *parent)
     : QWidget(parent), ui(new Ui::onlinegame) {
@@ -14,13 +16,13 @@ onlinegame::onlinegame(QWidget *parent)
     connect(ui->concedeBtn, &QPushButton::clicked, this,
             [=] { emit signalConcede(); });
 
-    connect(ui->replayBtn, &QPushButton::clicked, this,
-            [=] { emit signalRestartGame(); });
-
-    connect(ui->backBtn, &QPushButton::clicked, this, [=] {
-        // if (isWatcher)
-        emit signalBack();
+    connect(ui->replayBtn, &QPushButton::clicked, this, [=] {
+        emit signalRequestReplay();
+        std::cout << "request replay!\n";
     });
+
+    connect(ui->backBtn, &QPushButton::clicked, this,
+            [=] { emit signalBack(); });
 
     connect(ui->preBtn, &QPushButton::clicked, this, [=] {
         emit signalPrepare(); // send signal preparing
@@ -162,7 +164,7 @@ void onlinegame::paintEvent(QPaintEvent *event) {
 }
 
 void onlinegame::mouseReleaseEvent(QMouseEvent *event) {
-    if (event->button() == Qt::LeftButton && status == GAMING) {
+    if (event->button() == Qt::LeftButton && status == GAMING && selfTurn) {
         int x = (event->pos().x() - POS + WIDTH / 2) / WIDTH;
         int y = (event->pos().y() - POS + WIDTH / 2) / WIDTH;
         if (event->pos().x() > POS - WIDTH / 2 &&
@@ -176,12 +178,15 @@ void onlinegame::mouseReleaseEvent(QMouseEvent *event) {
 }
 
 void onlinegame::mouseMoveEvent(QMouseEvent *event) {
-    if (event->HoverMove && status == GAMING) {
+    if (event->HoverMove && status == GAMING && selfTurn) {
         int x = (event->pos().x() - POS + WIDTH / 2) / WIDTH;
         int y = (event->pos().y() - POS + WIDTH / 2) / WIDTH;
         hoverPosition.setX(x);
         hoverPosition.setY(y);
         update();
+    } else {
+        hoverPosition.setX(-1);
+        hoverPosition.setX(-1);
     }
 }
 
@@ -209,15 +214,10 @@ void onlinegame::updateBoard(int pos[15][15]) {
 }
 
 void onlinegame::respondWin(int color) {
-    if (color == BLACK_CHESS) {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("Black Win!"));
-        mb.setText(tr("Black win!"));
-        mb.setInformativeText(tr("Are you want to play again?"));
-        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No |
-                              QMessageBox::Default);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
+    if (color == selfColor) {
+        switch (QMessageBox::question(
+            this, "You win!", "Are you want to play again?",
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No)) {
         case QMessageBox::Yes:
             clearBoard();
             update();
@@ -229,14 +229,9 @@ void onlinegame::respondWin(int color) {
             break;
         }
     } else if (color == WHITE_CHESS) {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("White Win!"));
-        mb.setText(tr("White win!"));
-        mb.setInformativeText(tr("Are you want to play again?"));
-        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No |
-                              QMessageBox::Default);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
+        switch (QMessageBox::question(
+            this, "Your rival wins!", "Are you want to play again?",
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::No)) {
         case QMessageBox::Yes:
             clearBoard();
             update();
@@ -250,19 +245,34 @@ void onlinegame::respondWin(int color) {
     } else if (color == NO_CHESS) {
     }
 }
+
 void onlinegame::respondRetract() {
-    QMessageBox mb;
-    mb.setWindowTitle(tr("REQUEST"));
-    mb.setText(tr("The rival request to retract!"));
-    mb.setInformativeText(tr("Do you agree with the rival's retract?"));
-    mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    mb.setDefaultButton(QMessageBox::Yes);
-    switch (mb.exec()) {
+    switch (QMessageBox::question(
+        this, "REQUEST",
+        "The rival request to retract!\nDo you agree with the rival's retract?",
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::No)) {
     case QMessageBox::Yes:
         emit signalRespondRetract(true);
         break;
     case QMessageBox::No:
         emit signalRespondRetract(false);
+        break;
+    default:
+        break;
+    }
+}
+
+void onlinegame::respondReplay() {
+    switch (QMessageBox::question(this, "REQUEST",
+                                  "The rival request to replay!\nDo you agree "
+                                  "with the rival's requestion?",
+                                  QMessageBox::Yes | QMessageBox::No,
+                                  QMessageBox::No)) {
+    case QMessageBox::Yes:
+        emit signalRespondReplay(true);
+        break;
+    case QMessageBox::No:
+        emit signalRespondReplay(false);
         break;
     default:
         break;

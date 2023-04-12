@@ -52,8 +52,10 @@ class gobangserver {
     void retract(int connfd);
 
     void requestRetract(int connfd);
+    void requestReplay(int connfd);
 
     void respondRetract(int connfd, bool anwser);
+    void respondReplay(int connfd, bool anwser);
 
     void prepare(int connfd);
 

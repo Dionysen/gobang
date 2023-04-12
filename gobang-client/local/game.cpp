@@ -5,6 +5,8 @@
 #include "settingdialog.h"
 #include "ui_game.h"
 #include <iostream>
+#include <qevent.h>
+#include <qmessagebox.h>
 
 game::game(QWidget *parent) : QWidget(parent), ui(new Ui::game) {
 
@@ -172,6 +174,8 @@ void game::mouseReleaseEvent(
     }
 }
 
+void game::mouseDoubleClickEvent(QMouseEvent *event) {}
+
 void game::mouseMoveEvent(QMouseEvent *event) {
     if (event->HoverMove && humanTurn == turn) {
         int x = (event->pos().x() - POS + WIDTH / 2) / WIDTH;
@@ -245,18 +249,8 @@ void game::drop(int x, int y) {
 void game::retract() // retract
 {
     if (turn != humanTurn) {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("Retract"));
-        mb.setText(tr("Invalid operator!"));
-        mb.setInformativeText(tr("It is NOT your turn!"));
-        mb.setStandardButtons(QMessageBox::Ok);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
-        case QMessageBox::Yes:
-            break;
-        default:
-            break;
-        }
+        QMessageBox::critical(this, "Retract",
+                              "Invalid operator!\nIt is NOT your turn!");
     } else {
         if (!m_board.empty() && isGaming()) {
             currentChess = m_board.back();
@@ -269,30 +263,15 @@ void game::retract() // retract
             m_board.pop_back();
             update();
         } else {
-            QMessageBox mb;
-            mb.setWindowTitle(tr("Retract"));
-            mb.setText(tr("Invalid operator!"));
-            mb.setInformativeText(tr("The chessboard is empty!"));
-            mb.setStandardButtons(QMessageBox::Ok);
-            mb.setDefaultButton(QMessageBox::Yes);
-            switch (mb.exec()) {
-            case QMessageBox::Yes:
-                break;
-            default:
-                break;
-            }
+            QMessageBox::critical(this, "Retract", "The chessboard is empty!");
         }
     }
 }
 
 void game::replay() {
-    QMessageBox mb;
-    mb.setWindowTitle(tr("REPLAY"));
-    mb.setText(tr("Replay the game!"));
-    mb.setInformativeText(tr("Are you sure?"));
-    mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    mb.setDefaultButton(QMessageBox::Yes);
-    switch (mb.exec()) {
+    switch (QMessageBox::question(
+        this, "REPLAY", "Are you sure you want to replay the game?",
+        QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)) {
     case QMessageBox::Yes:
         newGame();
         update();
@@ -362,16 +341,10 @@ int game::isWin(int x, int y) // Judge winner
 
 void game::respondWin(int player) // respond win
 {
-
-    if (player == BLACK_CHESS) {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("Black Win!"));
-        mb.setText(tr("Black win!"));
-        mb.setInformativeText(tr("Are you want to play again?"));
-        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No |
-                              QMessageBox::Default);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
+    if (player == humanTurn) {
+        switch (QMessageBox::question(
+            this, "You win!", "Are you sure you want to play again?",
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)) {
         case QMessageBox::Yes:
             ChessEngine::reset(humanTurn);
             newGame();
@@ -383,14 +356,9 @@ void game::respondWin(int player) // respond win
             break;
         }
     } else if (player == WHITE_CHESS) {
-        QMessageBox mb;
-        mb.setWindowTitle(tr("White Win!"));
-        mb.setText(tr("White win!"));
-        mb.setInformativeText(tr("Are you want to play again?"));
-        mb.setStandardButtons(QMessageBox::Yes | QMessageBox::No |
-                              QMessageBox::Default);
-        mb.setDefaultButton(QMessageBox::Yes);
-        switch (mb.exec()) {
+        switch (QMessageBox::question(
+            this, "The robot wins!", "Are you sure you want to play again?",
+            QMessageBox::Yes | QMessageBox::No, QMessageBox::Yes)) {
         case QMessageBox::Yes:
             ChessEngine::reset(humanTurn);
             newGame();

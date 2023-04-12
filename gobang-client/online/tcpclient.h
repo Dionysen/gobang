@@ -57,6 +57,8 @@ class tcpclient {
     void drop(int x, int y);         // drop
     void requestRetract();           // retract
     void repondRetract(bool anwser); // respond retracting
+    void requestReplay();            // replay
+    void repondReplay(bool anwser);  // respond replay
     void exit();                     // exit
     void concede();                  // concede
     void restartGame();              // restart a game
