@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>719</height>
+    <height>711</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,10 +16,10 @@
   <widget class="QPushButton" name="preBtn">
    <property name="geometry">
     <rect>
-     <x>200</x>
-     <y>290</y>
-     <width>241</width>
-     <height>81</height>
+     <x>190</x>
+     <y>260</y>
+     <width>250</width>
+     <height>100</height>
     </rect>
    </property>
    <property name="text">
@@ -51,7 +51,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>500</y>
+     <y>470</y>
      <width>241</width>
      <height>31</height>
     </rect>
@@ -72,7 +72,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>460</y>
+     <y>430</y>
      <width>241</width>
      <height>31</height>
     </rect>
@@ -114,7 +114,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>110</y>
+     <y>120</y>
      <width>241</width>
      <height>31</height>
     </rect>
@@ -135,7 +135,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>420</y>
+     <y>390</y>
      <width>241</width>
      <height>31</height>
     </rect>
@@ -177,7 +177,7 @@
    <property name="geometry">
     <rect>
      <x>640</x>
-     <y>360</y>
+     <y>340</y>
      <width>241</width>
      <height>31</height>
     </rect>
@@ -244,6 +244,48 @@
    </property>
    <property name="text">
     <string>Retract</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="blackTurnPtn">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>100</y>
+     <width>331</width>
+     <height>211</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(0, 0, 0, 0);
+border:2px solid ;
+border-color: rgb(143, 143, 143);</string>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="whiteTurnPtn">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>600</x>
+     <y>320</y>
+     <width>331</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgba(0, 0, 0, 0);
+border:2px solid ;
+border-color: rgb(143, 143, 143);</string>
+   </property>
+   <property name="text">
+    <string/>
    </property>
   </widget>
  </widget>

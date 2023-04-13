@@ -127,6 +127,8 @@ void tcpclient::parseInformation(onlinegame &OnlineGame, lobby &Lobby,
         else if (json["type"].s().compare("replay") == 0)
             OnlineGame.respondReplay();
     } else if (head.compare("respond") == 0) {
+        if (json["type"].s().compare("retract") == 0) {
+        }
         // nothing
     } else if (head.compare("user") == 0) { // Update User Info
         std::cout << "Client：" << json["connfd"].i32()
@@ -151,6 +153,13 @@ void tcpclient::parseInformation(onlinegame &OnlineGame, lobby &Lobby,
         }
         emit OnlineGame.siganlUpdateUserInfo();
         OnlineGame.updateRoomInfo();
+    } else if (head.compare("currentChess") == 0) {
+        OnlineGame.setCurrentChess(chess(json["x"].i32(), json["y"].i32(),
+                                         json["color"].i32(),
+                                         json["step"].i32()));
+        OnlineGame.update();
+    } else if (head.compare("restart") == 0) {
+        OnlineGame.newGame();
     }
 }
 
@@ -272,6 +281,14 @@ void tcpclient::concede() {
 void tcpclient::restartGame() {
     json.clear();
     json["action"] = "restart";
+    std::string buff = json.encode();
+    send(sockfd, buff.data(), buff.size(), 0);
+}
+
+void tcpclient::setPlayerName(QString name) {
+    json.clear();
+    json["action"] = "name";
+    json["name"] = name.toStdString();
     std::string buff = json.encode();
     send(sockfd, buff.data(), buff.size(), 0);
 }

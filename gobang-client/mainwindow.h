@@ -47,6 +47,7 @@ class MainWindow : public QMainWindow {
     void backToHome();
     void backToHomeNoAsk();
     void toGamePage();
+    void help();
     void exit();
 
     void createRoom();

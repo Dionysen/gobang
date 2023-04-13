@@ -1,0 +1,104 @@
+[
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/gobang-client_autogen/mocs_compilation.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/mocs_compilation.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/mocs_compilation.cpp",
+  "output": "CMakeFiles/gobang-client.dir/gobang-client_autogen/mocs_compilation.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/main.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/main.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/main.cpp",
+  "output": "CMakeFiles/gobang-client.dir/main.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/mainwindow.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/mainwindow.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/mainwindow.cpp",
+  "output": "CMakeFiles/gobang-client.dir/mainwindow.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/base/chess.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/base/chess.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/base/chess.cpp",
+  "output": "CMakeFiles/gobang-client.dir/base/chess.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/local/home.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/local/home.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/local/home.cpp",
+  "output": "CMakeFiles/gobang-client.dir/local/home.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/local/game.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/local/game.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/local/game.cpp",
+  "output": "CMakeFiles/gobang-client.dir/local/game.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/local/settingdialog.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/local/settingdialog.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/local/settingdialog.cpp",
+  "output": "CMakeFiles/gobang-client.dir/local/settingdialog.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/local/robotthread.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/local/robotthread.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/local/robotthread.cpp",
+  "output": "CMakeFiles/gobang-client.dir/local/robotthread.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/online/lobby.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/online/lobby.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/online/lobby.cpp",
+  "output": "CMakeFiles/gobang-client.dir/online/lobby.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/online/tcpclient.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/online/tcpclient.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/online/tcpclient.cpp",
+  "output": "CMakeFiles/gobang-client.dir/online/tcpclient.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/online/recvthread.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/online/recvthread.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/online/recvthread.cpp",
+  "output": "CMakeFiles/gobang-client.dir/online/recvthread.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/online/onlinegame.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/online/onlinegame.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/online/onlinegame.cpp",
+  "output": "CMakeFiles/gobang-client.dir/online/onlinegame.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/lib/openjson/openjson.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/lib/openjson/openjson.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/lib/openjson/openjson.cpp",
+  "output": "CMakeFiles/gobang-client.dir/lib/openjson/openjson.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/robot/ChessEngine.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/robot/ChessEngine.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/robot/ChessEngine.cpp",
+  "output": "CMakeFiles/gobang-client.dir/robot/ChessEngine.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/robot/PossiblePositionManager.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/robot/PossiblePositionManager.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/robot/PossiblePositionManager.cpp",
+  "output": "CMakeFiles/gobang-client.dir/robot/PossiblePositionManager.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/robot/ACSearcher.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/robot/ACSearcher.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/robot/ACSearcher.cpp",
+  "output": "CMakeFiles/gobang-client.dir/robot/ACSearcher.cpp.o"
+},
+{
+  "directory": "/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug",
+  "command": "/usr/bin/g++ -DQT_CORE_LIB -DQT_GUI_LIB -DQT_WIDGETS_LIB -I/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/gobang-client_autogen/include -I/home/dionysen/Documents/gobang/gobang-client/./robot -I/home/dionysen/Documents/gobang/gobang-client/./local -I/home/dionysen/Documents/gobang/gobang-client/./online -I/home/dionysen/Documents/gobang/gobang-client/./base -isystem /usr/include/qt -isystem /usr/include/qt/QtWidgets -isystem /usr/include/qt/QtGui -isystem /usr/include/qt/QtCore -isystem /usr/lib/qt/mkspecs/linux-g++ -DQT_QML_DEBUG -g -std=gnu++17 -fPIC -o CMakeFiles/gobang-client.dir/robot/stdafx.cpp.o -c /home/dionysen/Documents/gobang/gobang-client/robot/stdafx.cpp",
+  "file": "/home/dionysen/Documents/gobang/gobang-client/robot/stdafx.cpp",
+  "output": "CMakeFiles/gobang-client.dir/robot/stdafx.cpp.o"
+}
+]

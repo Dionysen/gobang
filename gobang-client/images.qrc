@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>resources/gobang.png</file>
+        <file>resources/gobangboard.png</file>
+    </qresource>
+</RCC>

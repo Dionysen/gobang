@@ -7,45 +7,54 @@
     <x>0</x>
     <y>0</y>
     <width>444</width>
-    <height>364</height>
+    <height>360</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="3" column="2" colspan="3">
-    <widget class="QDialogButtonBox" name="buttonBox">
+   <item row="1" column="3">
+    <spacer name="horizontalSpacer_3">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
      </property>
-    </widget>
+    </spacer>
+   </item>
+   <item row="1" column="6">
+    <spacer name="horizontalSpacer_5">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item row="2" column="2">
-    <widget class="QLabel" name="label_3">
-     <property name="text">
-      <string>Single sentence length</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="2">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Difficulty</string>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="2">
     <widget class="QLabel" name="label_2">
      <property name="text">
       <string>Robot Color</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
+   <item row="3" column="2">
+    <widget class="QLabel" name="label_3">
+     <property name="text">
+      <string>Single Round Length</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="4">
     <widget class="QComboBox" name="comboBox_2">
      <item>
       <property name="text">
@@ -59,28 +68,15 @@
      </item>
     </widget>
    </item>
-   <item row="0" column="3">
-    <spacer name="horizontalSpacer_3">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="2" column="4">
-    <widget class="QLineEdit" name="lineEdit">
+   <item row="1" column="2">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>5400</string>
+      <string>Difficulty</string>
      </property>
     </widget>
    </item>
-   <item row="0" column="1">
-    <spacer name="horizontalSpacer_4">
+   <item row="1" column="0">
+    <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -92,7 +88,7 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="4">
+   <item row="1" column="4">
     <widget class="QComboBox" name="comboBox">
      <item>
       <property name="text">
@@ -131,7 +127,7 @@
      </item>
     </widget>
    </item>
-   <item row="0" column="5">
+   <item row="1" column="5">
     <spacer name="horizontalSpacer_2">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
@@ -144,8 +140,25 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="0">
-    <spacer name="horizontalSpacer">
+   <item row="5" column="2" colspan="3">
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="4">
+    <widget class="QLineEdit" name="lineEdit">
+     <property name="text">
+      <string>1200</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <spacer name="horizontalSpacer_4">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
@@ -157,18 +170,19 @@
      </property>
     </spacer>
    </item>
-   <item row="0" column="6">
-    <spacer name="horizontalSpacer_5">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+   <item row="0" column="2">
+    <widget class="QLabel" name="label_4">
+     <property name="text">
+      <string>Your Name</string>
      </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
+    </widget>
+   </item>
+   <item row="0" column="4">
+    <widget class="QLineEdit" name="lineEdit_2">
+     <property name="text">
+      <string>Player 1</string>
      </property>
-    </spacer>
+    </widget>
    </item>
   </layout>
  </widget>

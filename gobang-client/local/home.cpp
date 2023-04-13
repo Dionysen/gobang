@@ -8,7 +8,7 @@ home::home(QWidget *parent) : QWidget(parent), ui(new Ui::home) {
             SLOT(newGame()));
     connect(ui->pushButton_PVP, SIGNAL(clicked(bool)), this,
             SLOT(connectToServer()));
-    // connect(ui->pushButton_help, SIGNAL(clicked(bool)), this, SLOT(help()));
+    connect(ui->pushButton_help, SIGNAL(clicked(bool)), this, SLOT(help()));
     connect(ui->pushButton_exit, SIGNAL(clicked(bool)), this, SLOT(exit()));
 }
 

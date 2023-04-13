@@ -11,9 +11,12 @@
 #include <QMouseEvent>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QTimer>
 #include <QWidget>
 #include <iostream>
+#include <map>
 #include <qevent.h>
+#include <qwindowdefs.h>
 #include <string>
 #include <vector>
 
@@ -43,6 +46,7 @@ class game : public QWidget {
     void setTurn(int turn);
     void setStep(int step);
     void setGameStatus(bool isGaming);
+    void updateRobotName(); // Update robot's name
 
     // Update information of room
     void updateRoomInfo();
@@ -69,10 +73,15 @@ class game : public QWidget {
     int positionStatus[15][15]; // chessboard position status
 
     int humanTurn, robotTurn;
+    int robotLevel;
     int time;
     robotthread *robotThread;
 
     SettingDialog *setDia;
+
+    QTimer *timer = new QTimer(this);
+
+    std::map<int, std::string> level;
 
   protected:
     void paintEvent(QPaintEvent *event);
@@ -84,6 +93,7 @@ class game : public QWidget {
     void signalBackToHome();
     void signalBackNoAsk();
     void siganlRobotDrop(int x, int y);
+    void signalSentNameToOnline(QString name);
 
   public slots:
 

@@ -3,12 +3,19 @@
 #include "ui_onlinegame.h"
 #include <iostream>
 #include <qmessagebox.h>
+#include <qnamespace.h>
+#include <string>
 
 onlinegame::onlinegame(QWidget *parent)
     : QWidget(parent), ui(new Ui::onlinegame) {
     ui->setupUi(this);
     this->setMouseTracking(true);
+    m_blackPlayerName = "Black Player";
+    m_whitePlayerName = "White Player";
     newGame();
+
+    ui->whiteTurnPtn->hide();
+    ui->whiteTurnPtn->hide();
 
     connect(ui->retractBtn, &QPushButton::clicked, this,
             [=] { emit signalRequestRetract(); });
@@ -27,6 +34,25 @@ onlinegame::onlinegame(QWidget *parent)
     connect(ui->preBtn, &QPushButton::clicked, this, [=] {
         emit signalPrepare(); // send signal preparing
     });
+
+    // timer
+    connect(timer, &QTimer::timeout, this, [=] {
+        if (status == GAMING) {
+            if (selfColor == BLACK_CHESS) {
+                if (selfTurn)
+                    m_blackTime--;
+                else
+                    m_whiteTime--;
+            } else if (selfColor == WHITE_CHESS) {
+                if (selfTurn)
+                    m_whiteTime--;
+                else
+                    m_blackTime--;
+            }
+        }
+        updateRoomInfo();
+    });
+    timer->start(1000);
 }
 
 onlinegame::~onlinegame() { delete ui; }
@@ -36,14 +62,17 @@ void onlinegame::newGame() {
     selfTurn = false;
     selfColor = NO_CHESS;
     step = 0;
-    m_blackPlayerName = "Black Player";
-    m_whitePlayerName = "White Player";
     m_blackPlayerId = 0;
     m_whitePlayerId = 1;
-    m_blackTime = 5400;
-    m_whiteTime = 5400;
+    m_blackTime = 1200;
+    m_whiteTime = 1200;
     clearBoard();
     currentChess = chess(-1, -1, NO_CHESS, -1);
+    if (selfColor == BLACK_CHESS)
+        m_blackPlayerName = m_name;
+    else if (selfColor == WHITE_CHESS)
+        m_whitePlayerName = m_name;
+    update();
 }
 
 void onlinegame::setWatcher(bool isWatcher) {
@@ -59,25 +88,53 @@ void onlinegame::setWatcher(bool isWatcher) {
 }
 
 void onlinegame::updateRoomInfo() { // update room info
+    // hide white player info when it is empty
+    if (m_whitePlayerName == "None") {
+        ui->white->hide();
+        ui->whiteName->hide();
+        ui->whiteID->hide();
+        ui->whiteTime->hide();
+    } else {
+        ui->white->show();
+        ui->whiteName->show();
+        ui->whiteID->show();
+        ui->whiteTime->show();
+    }
+
     // black
     ui->blackID->setText(QString::fromStdString(
         "Black ID: " + std::to_string(this->m_blackPlayerId)));
     ui->blackName->setText(
         QString::fromStdString("Black Name: " + m_blackPlayerName));
     ui->blackTime->setText(
-        QString::fromStdString("Time: " + std::to_string(m_blackTime)));
+        QString::fromStdString("Time: " + std::to_string(m_blackTime / 60) +
+                               ":" + std::to_string(m_blackTime % 60)));
     // white
     ui->whiteID->setText(QString::fromStdString(
         "White ID: " + std::to_string(this->m_whitePlayerId)));
     ui->whiteName->setText(
         QString::fromStdString("White Name: " + m_whitePlayerName));
     ui->whiteTime->setText(
-        QString::fromStdString("Time: " + std::to_string(m_whiteTime)));
+        QString::fromStdString("Time: " + std::to_string(m_whiteTime / 60) +
+                               ":" + std::to_string(m_whiteTime % 60)));
 
     if (status == GAMING || status == WATCHING) { // GAMING
         ui->preBtn->setFixedSize(0, 0);
     } else
-        ui->preBtn->setFixedSize(300, 200);
+        ui->preBtn->setFixedSize(240, 100);
+
+    if (status == GAMING) { // highlight
+        if (getTurn() == BLACK_CHESS) {
+            ui->blackTurnPtn->show();
+            ui->whiteTurnPtn->hide();
+        } else {
+            ui->blackTurnPtn->hide();
+            ui->whiteTurnPtn->show();
+        }
+    } else {
+        ui->whiteTurnPtn->hide();
+        ui->whiteTurnPtn->hide();
+    }
 }
 
 // event function
@@ -87,7 +144,7 @@ void onlinegame::paintEvent(QPaintEvent *event) {
     QColor boardBackgroundColor(206, 178, 152);
     paint.setPen(boardBackgroundColor);
     paint.setBrush(boardBackgroundColor);
-    paint.drawRect(POS - WIDTH / 2, POS - WIDTH / 2, 15 * WIDTH, 15 * WIDTH);
+    // paint.drawRect(POS - WIDTH / 2, POS - WIDTH / 2, 15 * WIDTH, 15 * WIDTH);
 
     paint.setPen(QPen(QColor(Qt::black), 1));
     for (int i = 0; i < ROW_COLUM; i++) {
@@ -124,13 +181,26 @@ void onlinegame::paintEvent(QPaintEvent *event) {
                                   POS + j * WIDTH - CHESS_RATIO,
                                   CHESS_RATIO * 2, CHESS_RATIO * 2);
             } else if (positionStatus[i][j] == WHITE_CHESS) {
-                paint.setPen(QPen(QColor(Qt::white), 1));
+                paint.setPen(QPen(QColor(Qt::black), 1));
                 paint.setBrush(Qt::white);
                 paint.drawEllipse(POS + i * WIDTH - CHESS_RATIO,
                                   POS + j * WIDTH - CHESS_RATIO,
                                   CHESS_RATIO * 2, CHESS_RATIO * 2);
             }
         }
+    }
+    // paint current chess
+    if (currentChess.x() != -1 && currentChess.y() != -1) {
+        paint.setPen(Qt::green);
+        paint.setBrush(Qt::green);
+        QPolygon triangle;
+        triangle.setPoints(3, POS + currentChess.x() * WIDTH,
+                           POS + currentChess.y() * WIDTH,
+                           POS + currentChess.x() * WIDTH,
+                           POS + currentChess.y() * WIDTH + CHESS_RATIO,
+                           POS + currentChess.x() * WIDTH + CHESS_RATIO,
+                           POS + currentChess.y() * WIDTH);
+        paint.drawPolygon(triangle);
     }
 
     if (hoverPosition.x() >= 0 && hoverPosition.x() < 15 &&
@@ -144,7 +214,7 @@ void onlinegame::paintEvent(QPaintEvent *event) {
             if (selfColor == WHITE_CHESS) {
                 QColor color = Qt::white;
                 color.setAlphaF(0.5);
-                paint.setPen(QPen(color));
+                paint.setPen(Qt::black);
                 paint.setBrush(color);
                 paint.drawEllipse(POS + hoverPosition.x() * WIDTH - CHESS_RATIO,
                                   POS + hoverPosition.y() * WIDTH - CHESS_RATIO,
@@ -187,9 +257,10 @@ void onlinegame::mouseMoveEvent(QMouseEvent *event) {
     } else {
         hoverPosition.setX(-1);
         hoverPosition.setX(-1);
+        update();
     }
 }
-
+void onlinegame::mouseDoubleClickEvent(QMouseEvent *event) {}
 // Operator
 
 void onlinegame::drop(int x, int y) {

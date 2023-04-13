@@ -1,0 +1,8 @@
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/gobang-client.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/edit_cache.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/rebuild_cache.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/list_install_components.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/install.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/install/local.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/install/strip.dir
+/home/dionysen/Documents/gobang/gobang-client/build-gobang-client-Qt_5_15_8_in_PATH-Debug/CMakeFiles/gobang-client_autogen.dir

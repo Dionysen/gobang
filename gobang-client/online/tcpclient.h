@@ -62,6 +62,8 @@ class tcpclient {
     void exit();                     // exit
     void concede();                  // concede
     void restartGame();              // restart a game
+
+    void setPlayerName(QString name);
 };
 
 #endif // TCPCLIENT_H

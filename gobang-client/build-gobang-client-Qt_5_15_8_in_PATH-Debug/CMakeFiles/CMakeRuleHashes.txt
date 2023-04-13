@@ -1,0 +1,2 @@
+# Hashes of file build rules.
+d60230134008f61f226f19dd006e1196 CMakeFiles/gobang-client_autogen

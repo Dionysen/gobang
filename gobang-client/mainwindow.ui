@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1000</width>
-    <height>748</height>
+    <height>742</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -34,7 +34,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>42</height>
+     <height>44</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuGame">
@@ -44,16 +44,33 @@
     <addaction name="actionNew_Game"/>
     <addaction name="actionBack"/>
     <addaction name="actionRetract"/>
+    <addaction name="actionReplay"/>
     <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuSetting">
     <property name="title">
      <string>Setting</string>
     </property>
-    <addaction name="actionRobot_Setting"/>
+    <addaction name="actionSetting"/>
+   </widget>
+   <widget class="QMenu" name="menuAbout">
+    <property name="title">
+     <string>About</string>
+    </property>
+    <addaction name="actionAbout_Qt"/>
+    <addaction name="actionAbout_Gobang"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionWhat_is_it"/>
+    <addaction name="actionHelp"/>
    </widget>
    <addaction name="menuGame"/>
    <addaction name="menuSetting"/>
+   <addaction name="menuHelp"/>
+   <addaction name="menuAbout"/>
   </widget>
   <action name="actionNew_Game">
    <property name="text">
@@ -75,9 +92,39 @@
     <string>Back to main menu</string>
    </property>
   </action>
-  <action name="actionRobot_Setting">
+  <action name="actionSetting">
    <property name="text">
-    <string>Robot Setting</string>
+    <string>Setting</string>
+   </property>
+  </action>
+  <action name="actionAbout_Qt">
+   <property name="text">
+    <string>About Qt</string>
+   </property>
+  </action>
+  <action name="actionAbout_Gobang">
+   <property name="text">
+    <string>About Gobang</string>
+   </property>
+  </action>
+  <action name="actionPlayer_Setting">
+   <property name="text">
+    <string>Player Setting</string>
+   </property>
+  </action>
+  <action name="actionReplay">
+   <property name="text">
+    <string>Replay</string>
+   </property>
+  </action>
+  <action name="actionWhat_is_it">
+   <property name="text">
+    <string>What is it?</string>
+   </property>
+  </action>
+  <action name="actionHelp">
+   <property name="text">
+    <string>Help</string>
    </property>
   </action>
  </widget>

@@ -13,5 +13,6 @@ void SettingDialog::on_SettingDialog_accepted() { // get settings, send it to
     int difficulty = ui->comboBox->currentIndex();
     int color = ui->comboBox_2->currentIndex();
     QString time = ui->lineEdit->text();
-    emit signalAcceptResult(difficulty, color, time);
+    QString name = ui->lineEdit_2->text();
+    emit signalAcceptResult(difficulty, color, time, name);
 }

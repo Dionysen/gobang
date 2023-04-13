@@ -1,4 +1,7 @@
 #include "gobangserver.h"
+#include "lib/openjson/openjson.h"
+#include <cstring>
+#include <sys/socket.h>
 
 gobangserver::gobangserver() { tcpServer.initServer(DEFAULT_PORT); }
 
@@ -332,9 +335,11 @@ void gobangserver::sentRoomInfo(int connfd) { // Send in-room player information
         if (findRival(connfd) != -1)
             send(findRival(connfd), sendMsg, strlen(buff.c_str()) + sizeof(int),
                  0);
-        for (auto i = 0; i < getRoom(connfd)->second.watchers.size(); i++) {
-            send(getRoom(connfd)->second.watchers[i], sendMsg,
-                 strlen(buff.c_str()) + sizeof(int), 0);
+        if (getRoom(connfd) != lobby.end()) {
+            for (auto i = 0; i < getRoom(connfd)->second.watchers.size(); i++) {
+                send(getRoom(connfd)->second.watchers[i], sendMsg,
+                     strlen(buff.c_str()) + sizeof(int), 0);
+            }
         }
     }
 
@@ -424,6 +429,8 @@ void gobangserver::parseInfo(int connfd, char buff[1024]) {
         }
     } else if (action.compare("exit") ==
                0) { // The signal is exit (considered as a towel throw
+    } else if (action.compare("name") == 0) {
+        setPlayerName(connfd, json["name"].s());
     } else {
         std::cout << "Parse error.\n";
     }
@@ -431,10 +438,18 @@ void gobangserver::parseInfo(int connfd, char buff[1024]) {
 }
 
 // action
+
+void gobangserver::setPlayerName(int connfd, std::string name) {
+    players[connfd]->m_name = name;
+}
+
 void gobangserver::retract(int connfd) {
     if (!getRoom(connfd)->second.m_board.empty()) {
         std::cout << "in retract\n";
         getRoom(connfd)->second.m_board.pop_back();
+        getRoom(connfd)->second.currentChess =
+            getRoom(connfd)->second.m_board.back();
+
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++)
                 getRoom(connfd)->second.positionStatus[i][j] = NO_CHESS;
@@ -443,6 +458,9 @@ void gobangserver::retract(int connfd) {
             getRoom(connfd)->second.positionStatus[i.m_x][i.m_y] = i.m_color;
         }
         turnToNext(connfd);
+        sentCurrentChess(connfd, getRoom(connfd)->second.currentChess);
+        sentCurrentChess(findRival(connfd),
+                         getRoom(connfd)->second.currentChess);
     }
 }
 void gobangserver::requestRetract(int connfd) {
@@ -524,7 +542,6 @@ void gobangserver::createRoom(int connfd) {
         players[connfd]->status = IN_ROOM;
         players[connfd]->m_isTurn = true;
         players[connfd]->m_color = BLACK_CHESS;
-        players[connfd]->m_name = "Black Player";
         players[connfd]->m_prepare = false;
         r.roomID = connfd;
         lobby[connfd] = r;
@@ -544,7 +561,6 @@ void gobangserver::joinRoom(int connfd, int roomID) {
             getRoom(connfd)->second.blackPlayer->m_rivalConnfd = connfd;
             players[connfd]->m_isTurn = false;
             players[connfd]->m_color = WHITE_CHESS;
-            players[connfd]->m_name = "White Player";
             players[connfd]->m_prepare = false;
         }
     }
@@ -577,6 +593,8 @@ void gobangserver::quitRoom(int connfd) {
                     getRoom(whiteid)->second.watchers.push_back(watcher[i]);
                 }
                 getRoom(whiteid)->second.blackPlayer->m_rivalConnfd = -1;
+                // setPlayerName(whiteid, whiteid)
+                sentRoomInfo(whiteid);
             } else { // White chess is not there, only black chess
                 for (int i = 0; i < getRoom(connfd)->second.watchers.size();
                      i++) {
@@ -586,10 +604,12 @@ void gobangserver::quitRoom(int connfd) {
                 lobby.erase(getRoom(connfd)->second.roomID); // Delete the room
             }
         } else if (getChessColor(connfd) == WHITE_CHESS) {
+            int blackid = findRival(connfd);
             auto i = getRoom(connfd);
             i->second.whitePlayer->m_rivalConnfd = -1;
             i->second.blackPlayer->m_rivalConnfd = -1;
             i->second.whitePlayer = nullptr;
+            sentRoomInfo(blackid);
         }
     } else if (players[connfd]->status == GAMING) {
         sentResultInfo(findRival(connfd),
@@ -627,9 +647,23 @@ void gobangserver::restart(int connfd) {
         for (int j = 0; j < 15; j++)
             getRoom(connfd)->second.positionStatus[i][j] = NO_CHESS;
     }
-
+    getRoom(connfd)->second.currentChess = chess(-1, -1, NO_CHESS, 0);
     getRoom(connfd)->second.turn = BLACK_CHESS;
     getRoom(connfd)->second.m_step = 0;
+    sentCurrentChess(connfd, getRoom(connfd)->second.currentChess);
+    sentCurrentChess(findRival(connfd), getRoom(connfd)->second.currentChess);
+
+    std::string buff{};
+    json.clear();
+    json["head"] = "restart";
+    buff = json.encode();
+
+    memset(sendMsg, 0, sizeof(sendMsg));
+    len = strlen(buff.c_str());
+    memcpy(sendMsg, &len, sizeof(int));
+    memcpy(sendMsg + sizeof(int), buff.c_str(), len);
+    send(connfd, sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
+    send(findRival(connfd), sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
 }
 
 void gobangserver::disconnect(int connfd) { // Disconnect
@@ -670,8 +704,29 @@ void gobangserver::drop(int connfd, int x, int y) {
         } else
             std::cout << "Error! Player is not exist.\n";
     }
+    sentCurrentChess(findRival(connfd), getRoom(connfd)->second.currentChess);
     std::cout << "[CONNFD: " << connfd << "[Drop: x=" << x << " y=" << y
               << std::endl;
+}
+
+void gobangserver::sentCurrentChess(int connfd, chess c) {
+    open::OpenJson json;
+    std::string buff{};
+    buff.clear();
+    memset(sendMsg, 0, sizeof(sendMsg));
+
+    json["head"] = "currentChess";
+    json["x"] = c.m_x;
+    json["y"] = c.m_y;
+    json["turn"] = c.m_color;
+    json["step"] = c.m_step;
+
+    buff = json.encode();
+
+    len = strlen(buff.c_str());
+    memcpy(sendMsg, &len, sizeof(int));
+    memcpy(sendMsg + sizeof(int), buff.c_str(), len);
+    send(connfd, sendMsg, strlen(buff.c_str()) + sizeof(int), 0);
 }
 
 int gobangserver::isWin(int connfd, int x, int y,

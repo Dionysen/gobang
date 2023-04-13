@@ -4,6 +4,7 @@
 #include "./lib/openjson/openjson.h"
 #include "base.h"
 #include "tcpserver.h"
+#include <string>
 
 class gobangserver {
   private:
@@ -43,6 +44,7 @@ class gobangserver {
     // void sentWatchersQuit(int connfd);
 
     void sentResultInfo(int connfd, int color); // sent result
+    void sentCurrentChess(int connfd, chess c);
 
     // After receiving the signal from the client, it reacts according to the
     // parsed information
@@ -68,6 +70,8 @@ class gobangserver {
     void quitRoom(int connfd);
 
     void quitLobby(int connfd);
+
+    void setPlayerName(int connfd, std::string name);
 
     void disconnect(int connfd);
     void drop(int connfd, int x, int y);

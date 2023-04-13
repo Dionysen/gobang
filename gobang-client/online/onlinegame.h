@@ -9,8 +9,10 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <QString>
+#include <QTimer>
 #include <QWidget>
 #include <iostream>
+#include <qtimer.h>
 #include <string>
 #include <vector>
 
@@ -30,16 +32,19 @@ class onlinegame : public QWidget {
 
     int step, m_whiteTime, m_blackTime;
     unsigned long m_blackPlayerId, m_whitePlayerId;
-    std::string m_blackPlayerName, m_whitePlayerName;
+    std::string m_name, m_blackPlayerName, m_whitePlayerName;
     chess currentChess;
     std::vector<chess> m_board;
     QPoint hoverPosition;
     int positionStatus[15][15];
 
+    QTimer *timer = new QTimer(this);
+
   protected:
     void paintEvent(QPaintEvent *event);
     void mouseReleaseEvent(QMouseEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
+    void mouseDoubleClickEvent(QMouseEvent *event);
 
   public:
     bool selfTurn; // is turn to self
@@ -59,6 +64,7 @@ class onlinegame : public QWidget {
     void setWhiteId(int id) { m_whitePlayerId = id; }
     void setWhiteName(std::string name) { m_whitePlayerName = name; }
     void setWatcher(bool isWatcher);
+    void setSelfName(std::string name) { m_name = name; }
 
     void clearBoard() {
         for (int i = 0; i < 15; i++) {
@@ -83,7 +89,27 @@ class onlinegame : public QWidget {
     void setSelfColor(int color) { selfColor = color; } // set selfcolor
     void setselfTurn();                                 // set selfturn
     chess getCurrentChess();                            // get current chess
-    void turnToNext() {                                 // next
+    void setCurrentChess(chess c) {
+        currentChess.setX(c.x());
+        currentChess.setY(c.y());
+    }
+    int getTurn() {
+        if (selfColor == BLACK_CHESS) {
+            if (selfTurn)
+                return BLACK_CHESS;
+            else
+                return WHITE_CHESS;
+            ;
+        } else {
+            if (selfTurn)
+                return WHITE_CHESS;
+            else
+                return BLACK_CHESS;
+            ;
+        }
+    }
+
+    void turnToNext() { // next
         if (selfTurn)
             selfTurn = false;
         else
@@ -100,9 +126,8 @@ class onlinegame : public QWidget {
     void signalConcede();                   // Concede
     void signalBack();                      // Back
     void signalBackToLobby();               // Back to lobby
-    // void signalReplay();
-    void signalRestartGame();    // Restart a new game
-    void siganlUpdateUserInfo(); // Update user info
+    void signalRestartGame();               // Restart a new game
+    void siganlUpdateUserInfo();            // Update user info
 };
 
 #endif // ONLINEGAME_H

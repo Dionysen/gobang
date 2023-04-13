@@ -18,7 +18,8 @@ class SettingDialog : public QDialog {
     void on_SettingDialog_accepted();
 
   signals:
-    void signalAcceptResult(int diff, int color, QString time);
+    void signalAcceptResult(int diff, int color, QString time,
+                            QString playerName);
 
   private:
     Ui::SettingDialog *ui;
