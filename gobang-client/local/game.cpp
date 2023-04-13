@@ -41,7 +41,10 @@ game::game(QWidget *parent) : QWidget(parent), ui(new Ui::game) {
                 ChessEngine::setLevel(diff + 1);
                 ChessEngine::reset(color);
                 humanTurn = color;
-                robotTurn = color % 1;
+                if (color == BLACK_CHESS)
+                    robotTurn = WHITE_CHESS;
+                else
+                    robotTurn = BLACK_CHESS;
                 this->time = time.toInt();
                 if (humanTurn == BLACK_CHESS) {
                     m_blackPlayerName = name.toStdString();
