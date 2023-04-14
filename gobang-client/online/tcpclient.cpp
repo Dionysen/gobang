@@ -9,7 +9,9 @@ bool tcpclient::connectToServer() {
 #ifdef WIN32
     WORD sockVersion = MAKEWORD(2, 2);
     WSADATA wsaData;
-    WSAStartup(sockVersion, &wsaData);
+    if(WSAStartup(sockVersion, &wsaData) != 0){
+        return 1;
+    }
 #endif
 
     if (0 >= (sockfd = socket(AF_INET, SOCK_STREAM, 0)))

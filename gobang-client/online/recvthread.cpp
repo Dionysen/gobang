@@ -6,8 +6,9 @@ void recvthread::run() {
     char buff[1024];
     while (true) {
         memset(buff, 0, sizeof(buff));
+
         int len = 0;
-        if (-1 == recv(m_sockfd, &len, sizeof(int), 0)) {
+        if (-1 == recv(m_sockfd,(char*)&len, sizeof(int), 0)) {
             perror("Recv size of data error\n");
         }
 

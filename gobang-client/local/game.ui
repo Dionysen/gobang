@@ -22,14 +22,6 @@
      <height>31</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>16</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
-   </property>
    <property name="text">
     <string>Black</string>
    </property>
@@ -42,14 +34,6 @@
      <width>241</width>
      <height>31</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>16</pointsize>
-     <weight>75</weight>
-     <bold>true</bold>
-    </font>
    </property>
    <property name="text">
     <string>White</string>
@@ -64,14 +48,6 @@
      <height>31</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
    <property name="text">
     <string>Player Name:</string>
    </property>
@@ -84,14 +60,6 @@
      <width>241</width>
      <height>31</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
    </property>
    <property name="text">
     <string>Time:</string>
@@ -106,14 +74,6 @@
      <height>31</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
    <property name="text">
     <string>Time:</string>
    </property>
@@ -126,14 +86,6 @@
      <width>241</width>
      <height>31</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
    </property>
    <property name="text">
     <string>Player Name:</string>
@@ -148,14 +100,6 @@
      <height>31</height>
     </rect>
    </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
-   </property>
    <property name="text">
     <string>Player ID:</string>
    </property>
@@ -168,14 +112,6 @@
      <width>241</width>
      <height>31</height>
     </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>思源黑体 CN</family>
-     <pointsize>11</pointsize>
-     <weight>50</weight>
-     <bold>false</bold>
-    </font>
    </property>
    <property name="text">
     <string>Player ID:</string>

@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     // pool.init();
+
     this->setFixedSize(1000, 750);
 
     this->setWindowIcon(QIcon(":icons/resources/gobang.png"));
@@ -68,7 +69,7 @@ MainWindow::MainWindow(QWidget *parent)
     });
     connect(ui->actionWhat_is_it, &QAction::triggered, this, [=] {
         QMessageBox mb(this);
-        mb.setWindowTitle(tr("Help"));
+        mb.setWindowTitle(tr("Gobang"));
         mb.setText(tr("GOBANG (CLient by Qt)"));
         mb.setIconPixmap(QPixmap(":/icons/resources/gobangboard.png"));
         mb.setInformativeText(

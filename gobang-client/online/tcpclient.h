@@ -6,9 +6,8 @@
 #include "onlinegame.h"
 
 #ifdef WIN32
-#include <windows.h>
 #include <winsock2.h>
-
+#include <windows.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <arpa/inet.h>
@@ -17,6 +16,7 @@
 #include <sys/types.h>
 #include <sys/unistd.h>
 #endif
+
 
 #define SERVER_IP "82.157.246.225"
 // #define SERVER_IP "127.0.0.1"
@@ -27,7 +27,8 @@ class tcpclient {
   private:
     struct sockaddr_in servaddr;
 #if WIN32
-    unsigned long long sockfd;
+//    unsigned long long sockfd;
+    SOCKET sockfd;
 #else
     int sockfd;
 #endif

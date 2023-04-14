@@ -30,6 +30,8 @@ set(PROJECT_SOURCES
     mainwindow.ui
     images.qrc
 
+    app_win32.rc
+
     ./base/base.h
     ./base/chess.h ./base/chess.cpp
 
@@ -71,7 +73,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(gobang-client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(gobang-client PRIVATE wsock32 Qt${QT_VERSION_MAJOR}::Widgets)
 
 set_target_properties(gobang-client PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
