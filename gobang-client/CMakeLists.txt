@@ -73,8 +73,8 @@ else()
     endif()
 endif()
 
-target_link_libraries(gobang-client PRIVATE wsock32 Qt${QT_VERSION_MAJOR}::Widgets)
-
+target_link_libraries(gobang-client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+# if is windows: target_link_libraries(gobang-client PRIVATE wsock32 Qt${QT_VERSION_MAJOR}::Widgets)
 set_target_properties(gobang-client PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
