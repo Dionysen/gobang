@@ -87,6 +87,15 @@ install(TARGETS gobang-client
     BUNDLE DESTINATION .
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
+# set(CPACK_PACKAGE_VENDOR "Gobang")
+# set(CPACK_PACKAGE_VERSION_MAJOR 1)
+# set(CPACK_PACKAGE_VERSION_MINOR 0)
+# set(CPACK_PACKAGE_VERSION_PATCH 0)
+# set(CPACK_PACKAGE_DESCRIPTION "A Simple gobang game, which has a client and a server. You can use it play gobang locally or on the network. ")
+#
+# include(CPack)
+
+
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(gobang-client)
 endif()
