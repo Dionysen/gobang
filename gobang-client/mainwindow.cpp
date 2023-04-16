@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     // pool.init();
 
     this->setFixedSize(1000, 750);
-
+    this->setWindowTitle("Gobang");
     this->setWindowIcon(QIcon(":icons/resources/gobang.png"));
 
     ui->stackedWidget->addWidget(Home);
