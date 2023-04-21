@@ -133,7 +133,7 @@ void tcpclient::parseInformation(onlinegame &OnlineGame, lobby &Lobby,
         }
         // nothing
     } else if (head.compare("user") == 0) { // Update User Info
-        std::cout << "Client：" << json["connfd"].i32()
+        std::cout << "Client:" << json["connfd"].i32()
                   << " Read user info: " << buff << std::endl;
         switch (json["status"].i32()) {
         case IN_LOBBY:

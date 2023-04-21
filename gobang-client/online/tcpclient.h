@@ -8,6 +8,7 @@
 #ifdef WIN32
 #include <winsock2.h>
 #include <windows.h>
+#include <WS2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <arpa/inet.h>

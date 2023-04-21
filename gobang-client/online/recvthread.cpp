@@ -17,7 +17,7 @@ void recvthread::run() {
 
         std::cout << "len = " << len << std::endl;
 
-        ssize_t isize = recv(m_sockfd, buff, len, 0);
+        int isize = recv(m_sockfd, buff, len, 0);
 
         std::cout << "buff = " << buff << std::endl;
 
