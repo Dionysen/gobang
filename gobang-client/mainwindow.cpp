@@ -279,7 +279,7 @@ void MainWindow::backToHome() {
             "Are you sure you want to back? Game status will not be saved.",
             QMessageBox::Yes | QMessageBox::No, QMessageBox::No)) {
         case QMessageBox::Yes:
-            Game->setGameStatus(false);                // Set not game
+            Game->setGameStatus(false);                //  Set not game
             ui->stackedWidget->setCurrentWidget(Home); // back to home
             break;
         case QMessageBox::No:
