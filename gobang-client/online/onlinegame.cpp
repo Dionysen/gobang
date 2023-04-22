@@ -118,10 +118,16 @@ void onlinegame::updateRoomInfo() { // update room info
         QString::fromStdString("Time: " + std::to_string(m_whiteTime / 60) +
                                ":" + std::to_string(m_whiteTime % 60)));
 
-    if (status == GAMING || status == WATCHING) { // GAMING
+    if (status == GAMING ) { // GAMING
         ui->preBtn->setFixedSize(0, 0);
-    } else
+    }
+    else if (status == WATCHING) {
+        ui->preBtn->setFixedSize(0, 0);
+    }
+    else {
         ui->preBtn->setFixedSize(240, 100);
+    }
+        
 
     if (status == GAMING) { // highlight
         if (getTurn() == BLACK_CHESS) {

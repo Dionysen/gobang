@@ -6,7 +6,6 @@
 #include "onlinegame.h"
 
 #include "tcpclient.h"
-#include <cstdlib>
 #include <qaction.h>
 #include <qdialog.h>
 #include <qicon.h>
@@ -182,7 +181,7 @@ MainWindow::MainWindow(QWidget *parent)
             OnlineGame->setWatcher(false);
             ui->stackedWidget->setCurrentWidget(Lobby);
         } else if (OnlineGame->status == IN_ROOM) {
-            OnlineGame->setWatcher(false);
+            OnlineGame->setWatcher(true);
             ui->stackedWidget->setCurrentWidget(OnlineGame);
             OnlineGame->updateRoomInfo();
         } else if (OnlineGame->status == GAMING) {
