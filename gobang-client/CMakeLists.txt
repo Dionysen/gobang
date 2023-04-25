@@ -91,7 +91,7 @@ endif()
 
 
 
-target_link_libraries(gobang-client PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(gobang-client PRIVATE wsock32 Qt${QT_VERSION_MAJOR}::Widgets)
 
 
 

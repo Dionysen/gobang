@@ -1,7 +1,7 @@
 /gobang-client/build/*
 /gobang-client/.cache/*
-/gobang-client/.vs/*
-/gobang-client/out/*
+/gobang-client/CMakeLists.txt.user
+
 /gobang-server/build/*
 /gobang-server/.cache/*
-/gobang-client/CMakeLists.txt.user
+
