@@ -10,7 +10,7 @@ class chess {
 
   public:
     chess();
-    inline int x() { return pos.x(); };
+    inline int x() { return pos.x(); }
     inline const int y() { return pos.y(); }
     inline const int getColor() { return color; }
     inline const int getStep() { return step; }
