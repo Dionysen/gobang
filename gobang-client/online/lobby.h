@@ -1,6 +1,6 @@
 #ifndef LOBBY_H
 #define LOBBY_H
-
+ 
 #include <QWidget>
 #include <iostream>
 #include <vector>
