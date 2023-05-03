@@ -14,7 +14,11 @@
 #endif
 
 // C 运行时头文件
+#ifdef __APPLE__
+#include <sys/malloc.h>
+#else
 #include <malloc.h>
+#endif
 #include <memory.h>
 #include <stdlib.h>
 
