@@ -87,6 +87,11 @@
      <height>31</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
+   </property>
    <property name="text">
     <string>Black</string>
    </property>
@@ -125,6 +130,11 @@
      <width>241</width>
      <height>31</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>24</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>White</string>
