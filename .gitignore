@@ -7,4 +7,4 @@
 
 /gobang-server/build/*
 /gobang-server/.cache/*
-
+/gobang-server/.xmake/*

@@ -6,7 +6,7 @@
 
 #ifdef _WIN32
 #include <windows.h>
-#include <winsock2.h>
+#include <winsock.h>
 #pragma comment(lib, "ws2_32.lib")
 #else
 #include <arpa/inet.h>
@@ -16,10 +16,11 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/unistd.h>
+#include <netinet/tcp.h>
 #endif
 
 #include <cstring>
-#include <netinet/tcp.h>
+
 
 #define MAXLINK 1024
 #define DEFAULT_PORT 16556
@@ -31,8 +32,12 @@ class tcpserver {
     struct sockaddr_in m_clientaddr;
 
   public:
+  
+  #ifdef _WIN32
+  #else
     int epld = epoll_create(10); // Create an epoll instance
     struct epoll_event ev;       // Create an epoll event structure
+  #endif
     int m_sockfd, m_connfd;
     bool m_btimeout;
     tcpserver();

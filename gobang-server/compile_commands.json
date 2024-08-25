@@ -1,0 +1,21 @@
+[
+{
+  "directory": "D:\\gobang\\gobang-server",
+  "arguments": ["clang.exe", "-c", "-Qunused-arguments", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-I.", "-Ilib\\openjson", "-fexceptions", "-fcxx-exceptions", "-DNDEBUG", "-o", "build\\.objs\\gobang-server\\windows\\x64\\release\\gobangserver.cpp.obj", "gobangserver.cpp"],
+  "file": "gobangserver.cpp"
+},
+{
+  "directory": "D:\\gobang\\gobang-server",
+  "arguments": ["clang.exe", "-c", "-Qunused-arguments", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-I.", "-Ilib\\openjson", "-fexceptions", "-fcxx-exceptions", "-DNDEBUG", "-o", "build\\.objs\\gobang-server\\windows\\x64\\release\\main.cpp.obj", "main.cpp"],
+  "file": "main.cpp"
+},
+{
+  "directory": "D:\\gobang\\gobang-server",
+  "arguments": ["clang.exe", "-c", "-Qunused-arguments", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-I.", "-Ilib\\openjson", "-fexceptions", "-fcxx-exceptions", "-DNDEBUG", "-o", "build\\.objs\\gobang-server\\windows\\x64\\release\\tcpserver.cpp.obj", "tcpserver.cpp"],
+  "file": "tcpserver.cpp"
+},
+{
+  "directory": "D:\\gobang\\gobang-server",
+  "arguments": ["clang.exe", "-c", "-Qunused-arguments", "-m64", "-fvisibility=hidden", "-fvisibility-inlines-hidden", "-O3", "-I.", "-Ilib\\openjson", "-fexceptions", "-fcxx-exceptions", "-DNDEBUG", "-o", "build\\.objs\\gobang-server\\windows\\x64\\release\\lib\\openjson\\openjson.cpp.obj", "lib\\openjson\\openjson.cpp"],
+  "file": "lib\\openjson\\openjson.cpp"
+}]
