@@ -20,17 +20,19 @@
 #include <string>
 #include <vector>
 
-namespace Ui {
-class game;
+namespace Ui
+{
+    class game;
 }
 
-class game : public QWidget {
+class game : public QWidget
+{
     Q_OBJECT
 
   public:
-    explicit game(QWidget *parent = nullptr);
+    explicit game(QWidget* parent = nullptr);
     ~game();
-    bool isGaming(); // Return m_isGaming
+    bool isGaming();  // Return m_isGaming
     // online
 
     // Interface For Setting Some Information
@@ -46,48 +48,53 @@ class game : public QWidget {
     void setTurn(int turn);
     void setStep(int step);
     void setGameStatus(bool isGaming);
-    void updateRobotName(); // Update robot's name
+    void updateRobotName();  // Update robot's name
 
     // Update information of room
     void updateRoomInfo();
 
     // Operator
-    void newGame();              // Init a new game
-    void drop(int x, int y);     // drop
-    void turnToNext();           // next player
-    void retract();              // retract
-    void replay();               // replay
-    int isWin(int x, int y);     // is someone win?
-    void respondWin(int player); // respond the result
-    void concede();              // concede
+    void newGame();               // Init a new game
+    void drop(int x, int y);      // drop
+    void turnToNext();            // next player
+    void retract();               // retract
+    void replay();                // replay
+    int  isWin(int x, int y);     // is someone win?
+    void respondWin(int player);  // respond the result
+    void concede();               // concede
+
+    SettingDialog* getSettingDialog()
+    {
+        return setDia;
+    }
 
   private:
-    Ui::game *ui;
-    bool m_isGaming;
-    int turn, step, m_whiteTime, m_blackTime;
-    unsigned long m_blackPlayerId, m_whitePlayerId;
-    std::string m_blackPlayerName, m_whitePlayerName;
-    chess currentChess;
+    Ui::game*          ui;
+    bool               m_isGaming;
+    int                turn, step, m_whiteTime, m_blackTime;
+    unsigned long      m_blackPlayerId, m_whitePlayerId;
+    std::string        m_blackPlayerName, m_whitePlayerName;
+    chess              currentChess;
     std::vector<chess> m_board;
-    QPoint hoverPosition;
-    int positionStatus[15][15]; // chessboard position status
+    QPoint             hoverPosition;
+    int                positionStatus[15][15];  // chessboard position status
 
-    int humanTurn, robotTurn;
-    int robotLevel;
-    int time;
-    robotthread *robotThread;
+    int          humanTurn, robotTurn;
+    int          robotLevel;
+    int          time;
+    robotthread* robotThread;
 
-    SettingDialog *setDia;
+    SettingDialog* setDia;
 
-    QTimer *timer = new QTimer(this);
+    QTimer* timer = new QTimer(this);
 
     std::map<int, std::string> level;
 
   protected:
-    void paintEvent(QPaintEvent *event);
-    void mouseReleaseEvent(QMouseEvent *event);
-    void mouseDoubleClickEvent(QMouseEvent *event);
-    void mouseMoveEvent(QMouseEvent *event);
+    void paintEvent(QPaintEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void mouseDoubleClickEvent(QMouseEvent* event);
+    void mouseMoveEvent(QMouseEvent* event);
 
   signals:
     void signalBackToHome();
@@ -100,4 +107,4 @@ class game : public QWidget {
     void setting();
 };
 
-#endif // GAME_H
+#endif  // GAME_H

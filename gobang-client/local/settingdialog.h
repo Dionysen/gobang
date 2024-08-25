@@ -3,26 +3,28 @@
 
 #include <QDialog>
 
-namespace Ui {
-class SettingDialog;
+namespace Ui
+{
+    class SettingDialog;
 }
 
-class SettingDialog : public QDialog {
+class SettingDialog : public QDialog
+{
     Q_OBJECT
 
   public:
-    explicit SettingDialog(QWidget *parent = nullptr);
+    explicit SettingDialog(QWidget* parent = nullptr);
     ~SettingDialog();
 
   private slots:
     void on_SettingDialog_accepted();
 
   signals:
-    void signalAcceptResult(int diff, int color, QString time,
-                            QString playerName);
+    void signalAcceptResult(int diff, int color, QString time, QString playerName);
+    void signalUpdateIP(QString serverIP);
 
   private:
-    Ui::SettingDialog *ui;
+    Ui::SettingDialog* ui;
 };
 
-#endif // SETTINGDIALOG_H
+#endif  // SETTINGDIALOG_H

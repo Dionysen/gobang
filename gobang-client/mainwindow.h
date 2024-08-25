@@ -18,29 +18,31 @@
 #endif
 
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
+namespace Ui
+{
+    class MainWindow;
 }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
   public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(QWidget* parent = nullptr);
     ~MainWindow();
-    game *Game = new game(this);
-    home *Home = new home(this);
-    lobby *Lobby = new lobby(this);
-    onlinegame *OnlineGame = new onlinegame(this);
-    tcpclient tcpClient;
+    game*       Game       = new game(this);
+    home*       Home       = new home(this);
+    lobby*      Lobby      = new lobby(this);
+    onlinegame* OnlineGame = new onlinegame(this);
+    tcpclient   tcpClient;
 
     // void static parseThreadHandle(onlinegame &OnlineGame, lobby &Lobby,
     //                               int connfd, tcpclient &tcpClient,
     //                               threadpool &pool);
 
   protected:
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent* event);
 
   private slots:
 
@@ -57,8 +59,8 @@ class MainWindow : public QMainWindow {
     void sendConnfd(int connfd);
 
   private:
-    Ui::MainWindow *ui;
-    recvthread *recvThread = new recvthread(this);
+    Ui::MainWindow* ui;
+    recvthread*     recvThread = new recvthread(this);
     // threadpool pool;
 };
-#endif // MAINWINDOW_H
+#endif  // MAINWINDOW_H

@@ -1,18 +1,27 @@
 #include "settingdialog.h"
 #include "ui_settingdialog.h"
 
-SettingDialog::SettingDialog(QWidget *parent)
-    : QDialog(parent), ui(new Ui::SettingDialog) {
+SettingDialog::SettingDialog(QWidget* parent)
+    : QDialog(parent)
+    , ui(new Ui::SettingDialog)
+{
     ui->setupUi(this);
 }
 
-SettingDialog::~SettingDialog() { delete ui; }
+SettingDialog::~SettingDialog()
+{
+    delete ui;
+}
 
-void SettingDialog::on_SettingDialog_accepted() { // get settings, send it to
-                                                  // Game
-    int difficulty = ui->comboBox->currentIndex();
-    int color = ui->comboBox_2->currentIndex();
-    QString time = ui->lineEdit->text();
-    QString name = ui->lineEdit_2->text();
+void SettingDialog::on_SettingDialog_accepted()
+{  // get settings, send it to
+   // Game
+    int     difficulty = ui->comboBox->currentIndex();
+    int     color      = ui->comboBox_2->currentIndex();
+    QString time       = ui->lineEdit->text();
+    QString name       = ui->lineEdit_2->text();
+    QString serverIP   = ui->lineEdit_4->text();
+
+    emit signalUpdateIP(serverIP);
     emit signalAcceptResult(difficulty, color, time, name);
 }

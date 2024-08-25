@@ -4,6 +4,7 @@
 #include "../lib/openjson/openjson.h"
 #include "lobby.h"
 #include "onlinegame.h"
+#include <string>
 
 #ifdef WIN32
 #include <WS2tcpip.h>
@@ -20,22 +21,13 @@
 #include <unistd.h>
 #endif
 
-#define SERVER_IP "10.8.154.184"
+// #define SERVER_IP "10.8.154.184"
 
 #define SERVER_PORT 16556
 #define BUFFSIZE 1024
 
 class tcpclient
 {
-  private:
-    struct sockaddr_in servaddr;
-#if WIN32
-    //    unsigned long long sockfd;
-    SOCKET sockfd;
-#else
-    int sockfd;
-#endif
-    open::OpenJson json;
 
   public:
     tcpclient();
@@ -71,6 +63,32 @@ class tcpclient
     void restartGame();               // restart a game
 
     void setPlayerName(QString name);
+
+    bool setIP(const std::string& ip)
+    {
+
+        m_IPAddress = ip;
+        return true;
+        // TODO judge ip is vaild
+    }
+
+    std::string getIP()
+    {
+        return m_IPAddress;
+    }
+
+  private:
+    struct sockaddr_in servaddr;
+
+    std::string m_IPAddress;
+
+#if WIN32
+    //    unsigned long long sockfd;
+    SOCKET sockfd;
+#else
+    int sockfd;
+#endif
+    open::OpenJson json;
 };
 
 #endif  // TCPCLIENT_H
