@@ -116,7 +116,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Game
 
-    connect(Game, &game::signalBackToHome, this, &MainWindow::backToHome);
+    connect(Game, SIGNAL(signalBackToHome()), this, SLOT(backToHome()));
     connect(Game, &game::signalBackNoAsk, this,
             [=] { // back to home directly
                 ui->stackedWidget->setCurrentWidget(Home);

@@ -1,5 +1,5 @@
 #include "recvthread.h"
-
+#include <iostream>
 recvthread::recvthread(QObject *parent) : QThread(parent) {}
 
 void recvthread::run() {

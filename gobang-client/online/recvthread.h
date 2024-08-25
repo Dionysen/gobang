@@ -2,7 +2,6 @@
 #define RECVTHREAD_H
 
 #include <QThread>
-#include <iostream>
 #include <string>
 
 #ifdef WIN32

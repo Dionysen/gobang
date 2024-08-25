@@ -2,6 +2,9 @@
 /gobang-client/.cache/*
 /gobang-client/CMakeLists.txt.user
 
+/gobang-client/.xmake/*
+/gobang-client/compile_commands.json
+
 /gobang-server/build/*
 /gobang-server/.cache/*
 
