@@ -2,6 +2,10 @@ add_rules("mode.debug", "mode.release")
 
 target("gobang-client")
     add_rules("qt.widgetapp")
+
+    set_languages("c++11")
+
+
     add_headerfiles(
         "*.h",
         "base/*.h",
@@ -53,6 +57,9 @@ target("gobang-client")
         "lib/openjson"
     )
 
-    add_defines(
-        "WIN32"
-    )
+    if (is_plat("windows")) then
+        add_defines(
+            "WIN32",
+            "UNICODE"
+        )
+    end
